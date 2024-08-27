@@ -1,0 +1,11 @@
+Register
+    seller
+    buyer
+Login
+    common
+Index
+Products
+    categories
+    add to cart
+    buy now
+
