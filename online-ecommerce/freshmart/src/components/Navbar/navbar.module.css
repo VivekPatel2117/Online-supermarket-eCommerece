@@ -1,0 +1,45 @@
+.navbar{
+    z-index: 1;
+    height: 15vh;
+    width: 100vw;
+    display: grid;
+    grid-template-columns: 2fr 5fr 2fr;
+    align-items: center;
+    background-color: #24b033;
+}
+.branding > h1{
+    color: #ffb63c;
+    text-align: center;
+}
+.searchBar{
+    display: flex;
+    justify-content: center;
+    width: 55vw;
+    height: 8vh;
+    gap: 1.5vh;
+}
+.input > input{
+    padding: 1vh;
+    width: 30vw;
+    height: 8vh;
+    border-radius: 2px;
+    border: none;
+}
+.icon{
+    background-color: #ffb63c;
+    color: white;
+    display: flex;
+    align-items: center;
+    width: 6vw;
+    border-radius: 2px;
+    height: 8vh;
+    justify-content: center;
+}
+.icon > p{
+    font-size: 3.5vh;
+    font-family: 'Gill Sans', sans-serif;
+}
+.actions{
+    display: flex;
+    justify-content: space-evenly;
+}

@@ -1,0 +1,42 @@
+body{
+  overflow-x: hidden;
+}
+.gridWrapper{
+  display: flex;
+  height: auto;
+  width: 100vw;
+  gap: 3vh;
+  justify-content: center;
+  align-items: center;
+  margin-top: 3vh;
+  margin-bottom: 3vh;
+  
+}
+.boxVertical{
+  height: 55vh;
+  width: 18vw;
+  overflow: hidden;
+}
+.boxVertical img{
+  width: auto;
+  height: 55dvh;
+  object-fit: cover;
+  aspect-ratio:2/3;
+}
+.boxHor{
+  background-color: black;
+  height: 25vh;
+  width: 28vw;
+  overflow: hidden;
+}
+.boxHor img {
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+}
+.horizontalGrid{
+  display: grid;
+  grid-template-rows:  1fr 1fr;
+  grid-template-columns: 1fr 1fr;
+  gap: 2vw;
+}
