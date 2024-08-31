@@ -1,0 +1,49 @@
+.navbarWrapper{
+    display: grid;
+    grid-template-columns: 2fr 5fr 2fr;
+    width: 100%;
+    height: 10vh;
+    background-color: #9dcd5a;
+    align-items: center;
+}
+.searchDiv{
+    position: relative;
+    display: grid;
+}
+.searchDiv > input{
+    padding: 1vh;
+    width: 100%;
+}
+
+  .logoDiv {
+    font-size: 1.5rem;
+  }
+  .inputDiv{
+    display: flex;
+    justify-content: space-around;
+  }
+  .searchIcon {
+  background-color: yellow;
+  }
+  
+  .icons {
+    display: flex;
+    gap: 20px;
+  }
+  
+  .label {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 1rem;
+    color: #555;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+  }
+  
+  .slideIn {
+    transform: translateY(-100%);
+    opacity: 1;
+  }
+  

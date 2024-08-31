@@ -1,0 +1,43 @@
+.ProductsSectionWrapper{
+    width: 95%;
+    height: 40vh;
+    display: grid;
+    grid-template-rows: 1fr 5fr;
+    justify-content: center;
+    gap: 3vh;
+    margin: 3vh;
+}
+.ProductsSectionProduct{
+    display: flex;
+    width: 90vw;
+    height: 45vh;
+    overflow-x: auto;
+    overflow-y: hidden;
+    align-items: center;
+}
+.products{
+    display: flex;
+    gap: 3vw;
+    width: 100%;
+    height: auto;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
+    animation: fadeOut 2s forwards;
+    animation-timeline: scroll();
+}
+.products::-webkit-scrollbar{
+    display: none;
+}
+.left,.right{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.151);
+    border: 1px solid;
+    color: white;
+    border-radius: 50%;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
+    
+}

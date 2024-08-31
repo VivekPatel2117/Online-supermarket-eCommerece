@@ -1,0 +1,92 @@
+.container{
+    display:grid;
+    height: 90vh;
+    width: 95vw;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+.container::-webkit-scrollbar{
+    display: none;
+}
+.loginCard{
+    display: grid;
+    border:1px solid black;
+    border-radius: 25px;
+    height: 75vh;
+    width: 30vw;
+}
+.formDiv{
+    display: grid;
+    grid-template-rows: 1fr 5fr;
+}
+.headers{
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    height: 15vh;
+    width: auto;
+}
+.headers > p {
+    font-size: 4vh;
+}
+.formInputs{
+    padding: 2vh;
+    display: flex;
+    flex-direction: column;
+}
+.inputDiv{
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    border-bottom: 2px solid gray;
+    position: relative;
+    margin: 15px 0px;
+}
+.inputDiv label{
+    position: absolute;
+    transform: translateY(-50%);
+    font-size: 16px;
+    pointer-events: none;
+    transition: 0.15s ease;
+    left: 0;
+    top: 50%;
+    color: gray;
+}
+.inputDiv input:focus~label,
+  .inputDiv input:valid~label {
+    font-size: 0.8rem;
+    top: 10px;
+    transform: translateY(-120%);
+  }
+.inputDiv input{
+    width: 100%; 
+    height: 40px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+}
+.loginBtn{
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+.loginBtn > button {
+    width: 100%;
+    background-color: rgb(150, 150, 24);
+    border-radius: 5px;
+    border: none;
+    height: 6vh;
+    color: white;
+
+}
+.formDivider{
+    display: flex;
+    justify-content: center;
+    margin: 2vh;
+}
+.oauthDiv{
+    display: flex;
+    justify-content: center;
+}

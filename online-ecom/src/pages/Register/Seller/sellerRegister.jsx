@@ -14,6 +14,7 @@ const SellerRegister = () => {
     };
 
     return (
+        <div className={styles.wrapperContainer}>
         <div className={styles.container}>
             <div className={styles.wrapper}>
                 <form onSubmit={handleSubmit}>
@@ -54,7 +55,7 @@ const SellerRegister = () => {
                         />
                         <label>Password</label>
                     </div>
-                    <button type="submit">Register</button>
+                    <button className={styles.resgiterButton} type="submit">Register</button>
                     <div className={styles.register}>
                         <p>Already a user? <a href="/Login/login.html">Login</a></p>
                     </div>
@@ -63,6 +64,7 @@ const SellerRegister = () => {
             <div className={styles.imgWrapper}>
                 <img src={SellerRegisterImg} alt="seller" />
             </div>
+        </div>
         </div>
     );
 };

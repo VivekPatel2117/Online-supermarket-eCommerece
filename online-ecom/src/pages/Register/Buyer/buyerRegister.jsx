@@ -3,7 +3,8 @@ import styles from './buyerRegister.module.css'
 import buyerImg from "../../../assets/buyer.png"
 const BuyerRegister = () => {
   return (
-    <div className={styles.parentWrapper}>
+    <div className={styles.wrapperBody}>
+      <div className={styles.parentWrapper}>
       <div className={styles.head}>
         <h1>Get Grocery at your door step</h1>
       </div>
@@ -27,7 +28,7 @@ const BuyerRegister = () => {
               <input type="password" required />
               <label>Password</label>
             </div>
-            <button type="submit">Register</button>
+            <button className={styles.resgiterButton} type="submit">Register</button>
             <div className={styles.register}>
               <p>
                 Already a customer? <a href="/Login/login.html">Login</a>
@@ -39,6 +40,7 @@ const BuyerRegister = () => {
           <img src={buyerImg} alt="buyer" />
         </div>
       </div>
+    </div>
     </div>
   );
 };
