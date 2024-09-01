@@ -2,11 +2,12 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #252f49;
+  background-color: rgb(255, 146, 57);
   height: 100vh;
   width: 100vw;
   min-height: 100vh;
   width: 100%;
+  color: black;
   padding: 0 10px;
 }
   .parentWrapper{
@@ -30,7 +31,8 @@
     height: 85vh;
     width: 80vw;
     display: grid;
-    background-color: #252f49;
+    background-color:white;
+    color: black;
     grid-template-columns: 1fr 1fr;
     align-items: center;
     justify-content: center;
@@ -77,21 +79,26 @@
   h2 {
     font-size: 2rem;
     margin-bottom: 20px;
-    color: #fff;
   }
   
   .inputField {
+    display: grid;
+    grid-template-columns: 85% 15%;
     position: relative;
     border-bottom: 2px solid #ccc;
     margin: 15px 0;
   }
-  
+  .isEyeToggle{
+    position: relative;
+    display: flex;
+    justify-content: end;
+    align-items: center;
+  }
   .inputField label {
     position: absolute;
     top: 50%;
     left: 0;
     transform: translateY(-50%);
-    color: #fff;
     font-size: 16px;
     pointer-events: none;
     transition: 0.15s ease;
@@ -104,7 +111,6 @@
     border: none;
     outline: none;
     font-size: 16px;
-    color: #fff;
   }
   
   .inputField input:focus~label,
@@ -119,11 +125,10 @@
     align-items: center;
     justify-content: space-between;
     margin: 25px 0 35px 0;
-    color: #fff;
   }
   
   #remember {
-    accent-color: #fff;
+    accent-color:rgb(255, 146, 57);;
   }
   
   .forget label {
@@ -136,7 +141,7 @@
   }
   
   .wrapper a {
-    color: #efefef;
+    color: rgb(255, 146, 57);;
     text-decoration: none;
   }
   
@@ -145,7 +150,7 @@
   }
   
   .resgiterButton {
-    background: #fff06ff2;
+    background: rgb(255, 146, 57);;
     color: #000;
     font-weight: 600;
     border: none;
@@ -158,13 +163,32 @@
   }
   
   .resgiterButton:hover {
-    color: #fff;
+    color: white;
     border-color: #fff;
-    background: rgba(255, 255, 255, 0.15);
+    background: rgb(255, 128, 0);
   }
   
   .register {
     text-align: center;
     margin-top: 30px;
-    color: #fff;
   }
+  .alreadyUserH4 {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .alreadyUserH4::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: rgb(255, 146, 57);;
+    bottom: 0;
+    left: 0;
+    transition: width 0.5s ease; 
+  }
+  
+  .alreadyUserH4:hover::after {
+    width: 100%; 
+  }
+  

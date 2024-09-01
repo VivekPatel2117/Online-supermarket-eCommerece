@@ -1,7 +1,32 @@
-import React from 'react';
+import React,{useState} from 'react';
 import styles from './buyerRegister.module.css'
 import buyerImg from "../../../assets/buyer.png"
+import axios from 'axios';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 const BuyerRegister = () => {
+  const naviagte = useNavigate();
+  const [isEyeToogle, setIsEyeToogle] = useState(false)
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("")
+  const [password, setPassword] = useState("");
+  const handleRegister = async(e) =>{
+    e.preventDefault()
+    const response = await axios.post("http://127.0.0.1:5000//buyerRegister",{username,email,password,phone});
+    console.log(response.status)
+    if(response.status === 200){
+      naviagte("/Home")
+    }else if(response.status == 409){
+      console.log(response)
+      naviagte("/Login")
+    }
+    else{
+      toast.error("Internal error occured",{autoClose:3000,position:"top-center"})
+    }
+  }
   return (
     <div className={styles.wrapperBody}>
       <div className={styles.parentWrapper}>
@@ -13,25 +38,32 @@ const BuyerRegister = () => {
           <form action="#">
             <h2>Register now</h2>
             <div className={styles.inputField}>
-              <input type="text" required />
+              <input type="text" onChange={(e)=>setUsername(e.target.value)} required />
               <label>Full name</label>
             </div>
             <div className={styles.inputField}>
-              <input type="number" required />
+              <input type="number" onChange={(e)=>setPhone(e.target.value)} required />
               <label>Phone number</label>
             </div>
             <div className={styles.inputField}>
-              <input type="email" required />
+              <input type="email" onChange={(e)=>setEmail(e.target.value)} required />
               <label>Email</label>
             </div>
             <div className={styles.inputField}>
-              <input type="password" required />
+              <input type={isEyeToogle ? "text" : "password"} onChange={(e)=>setPassword(e.target.value)} required />
               <label>Password</label>
+              <div className={styles.isEyeToggle} onClick={()=>setIsEyeToogle(!isEyeToogle)}>
+              {isEyeToogle ? (
+                <Visibility/>
+              ):(
+                <VisibilityOff/>
+              )}
+              </div>
             </div>
-            <button className={styles.resgiterButton} type="submit">Register</button>
+            <button className={styles.resgiterButton} onClick={handleRegister}>Register</button>
             <div className={styles.register}>
-              <p>
-                Already a customer? <a href="/Login/login.html">Login</a>
+              <p className={styles.alreadyUserH4}>
+                Already a customer? <Link to={"/"}>Login</Link>
               </p>
             </div>
           </form>

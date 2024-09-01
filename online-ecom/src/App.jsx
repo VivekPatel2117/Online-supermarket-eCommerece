@@ -1,9 +1,10 @@
 import './App.css'
 import React from 'react';
 import {BrowserRouter,Routes,Route} from "react-router-dom";
-import Login from './pages/Login/login';
+import Login from "./pages/Login/Login"
 import BuyerRegister from './pages/Register/Buyer/buyerRegister';
 import Home from './pages/Home/Home';
+// import { ToastContainer } from 'react-toastify';
 function App() {
   return (
   <>

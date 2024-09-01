@@ -16,7 +16,7 @@ export default function ProductsSection({products,title}) {
         {img:amul,name:"amul butter",quantity:"500g",price:500}
     ])
     const productsRef = useRef(null);
-
+    const [isRightClicked, setIsRightClicked] = useState(false)
   const scrollLeft = () => {
     if (productsRef.current) {
       productsRef.current.scrollBy({ left: -200, behavior: 'smooth' });
@@ -24,6 +24,7 @@ export default function ProductsSection({products,title}) {
   };
 
   const scrollRight = () => {
+    setIsRightClicked(true)
     if (productsRef.current) {
       productsRef.current.scrollBy({ left: 200, behavior: 'smooth' });
     }
@@ -36,7 +37,7 @@ export default function ProductsSection({products,title}) {
             <h1>{title}</h1>
         </div>
         <div className={styles.ProductsSectionProduct}>
-            <div onClick={scrollLeft} className={styles.left}>{"<"}</div>
+            <div onClick={scrollLeft} style={{visibility: isRightClicked ? "visible" : "hidden"}} className={styles.left}>{"<"}</div>
             <div className={styles.products} ref={productsRef}>
                 {pro.map((item,index)=>(
                     <ProductCard key={index} ProductImg={item.img} ProductName={item.name} ProductPrice={item.price} ProductQuantity={item.quantity}/>

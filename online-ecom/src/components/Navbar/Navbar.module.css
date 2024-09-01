@@ -11,10 +11,22 @@
     display: grid;
 }
 .searchDiv > input{
-    padding: 1vh;
-    width: 100%;
-}
+    padding: 2vh;
+    width: 45vw;
+    border-radius: 5px;
+    border: none;
+    outline: none;
 
+}
+.searchDiv > label{
+  display: flex;
+  gap: 1vw;
+  height: 6vh;
+  width: 100%;
+  position: absolute;
+  align-items: center;
+  padding: 5px;
+}
   .logoDiv {
     font-size: 1.5rem;
   }
@@ -25,25 +37,39 @@
   .searchIcon {
   background-color: yellow;
   }
-  
+  .iconsWrapper{
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+  }
   .icons {
     display: flex;
-    gap: 20px;
+    justify-content: space-around;
+    width: 15vw;
+    gap: 1vw;
   }
   
   .label {
-    position: absolute;
     top: 50%;
     left: 10px;
-    transform: translateY(-50%);
+    animation: transform 2.5s ease infinite; /* Add duration and timing function */
     font-size: 1rem;
     color: #555;
-    transition: transform 0.5s ease, opacity 0.5s ease;
-    opacity: 0;
+    opacity: 1;
   }
   
-  .slideIn {
-    transform: translateY(-100%);
-    opacity: 1;
+  @keyframes transform {
+    0% {
+      transform: translateY(100%);
+      opacity: 1; /* Ensure it's visible when starting */
+    }
+    50%{
+      transform: translateY(0%);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(-150%);
+      opacity: 0; /* Fade out at the end */
+    }
   }
   

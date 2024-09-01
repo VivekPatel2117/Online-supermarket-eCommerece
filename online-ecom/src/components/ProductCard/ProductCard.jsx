@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from "./ProductCard.module.css";
+import CurrencyRupeeIcon from '@mui/icons-material/CurrencyRupee';
 export default function ProductCart({ProductImg,ProductName,ProductQuantity,ProductPrice}) 
 {
   return (
@@ -14,7 +15,7 @@ export default function ProductCart({ProductImg,ProductName,ProductQuantity,Prod
             </div>
             <div className={styles.productPrice}>
                 <div className={styles.price}>
-                    {ProductPrice}
+                   <CurrencyRupeeIcon fontSize='small'/> {ProductPrice}
                 </div>
                 <div className={styles.addToCart}>
                     <button>Add</button>

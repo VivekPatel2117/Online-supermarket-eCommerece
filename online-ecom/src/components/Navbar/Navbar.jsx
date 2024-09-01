@@ -1,23 +1,31 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Navbar.module.css";
-
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 export default function Navbar() {
   const searchLabels = ["Apples", "Milk", "Butter"];
   const [currentLabel, setCurrentLabel] = useState(searchLabels[0]);
   const [animate, setAnimate] = useState(false);
-
+  const [searchValue, setSearchValue] = useState("");
+  const handleInput = (value) =>{
+    const labelTag = document.getElementById("searchLabel")
+    if(labelTag && value.target.value !=""){
+      labelTag.style.visibility = "hidden"
+    }else{
+      labelTag.style.visibility = "visible"
+    }
+    setSearchValue(value.target.value)
+  }
   useEffect(() => {
     const interval = setInterval(() => {
-      setAnimate(true); // Trigger the animation
-      setTimeout(() => {
         setCurrentLabel((prevLabel) => {
           const currentIndex = searchLabels.indexOf(prevLabel);
           const nextIndex = (currentIndex + 1) % searchLabels.length;
           return searchLabels[nextIndex];
         });
-        setAnimate(false); // Reset the animation
-      }, 3500); // This timeout should match the animation duration
-    }, 1000); // Change label every 3 seconds
+    },2500);
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, [searchLabels]);
@@ -27,23 +35,24 @@ export default function Navbar() {
       <div className={styles.logoDiv}>Image here</div>
       <div className={styles.inputDiv}>
         <div className={styles.searchDiv}>
-          <input type="search" name="searchbox" id="searchbox" />
+          <input onChange={handleInput} value={searchValue} style={{paddingLeft:"5vh"}} type="search" name="searchbox" id="searchbox" />
           <label style={{display:"flex"}} htmlFor="searchbox">
-            <p>search<span
-              className={`${styles.label} ${animate ? styles.slideIn : ""}`}
+            <SearchRoundedIcon/>
+            <span
+              className={styles.label}
+              id="searchLabel"
             >
-              "{currentLabel}"
+              Search "{currentLabel}"
             </span>
-            </p>
+            
           </label>
         </div>
-        <div className={styles.searchIcon}>icon</div>
       </div>
-      <div>
+      <div className={styles.iconsWrapper}>
         <div className={styles.icons}>
-          <p>cart</p>
-          <p>wishlist</p>
-          <p>profile</p>
+          <p><ShoppingCartOutlinedIcon fontSize={"large"}/></p>
+          <p><FavoriteBorderIcon fontSize="large"/></p>
+          <p><PersonOutlineIcon fontSize="large" /></p>
         </div>
       </div>
     </div>
