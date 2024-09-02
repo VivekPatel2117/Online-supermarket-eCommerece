@@ -1,12 +1,11 @@
 import React,{useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { toast,ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 import styles from "./login.module.css";
 import gLogo from "../../assets/gLogo.png";
 import LoginImg from "../../assets/login.png";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import axios from "axios"
 import { Alert } from "@mui/material";
 export default function Login() {
   const navigate = useNavigate();
@@ -14,17 +13,26 @@ export default function Login() {
   const [userName, setUserName] = useState("")
   const [password, setPassword] = useState("");
   const [isAlert, setIsAlert] = useState(false);
-  const handleSubmit = async() => {
-    const response = await axios.post("http://127.0.0.1:5000/login",{username:userName,password});
-    console.log("Hello");
-    console.log(response.status)
-    if(response.status === 200){
-      navigate("/Home")
-    }else if (response){
-      setIsAlert(true)
-      alert("Wrong credentials");
+  const handleSubmit = async () => {
+      const response = await fetch("http://127.0.0.1:5000/login", {
+        method:"POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify({
+          username: userName,
+          password,
+        })
+      });
+      console.log(response.status);
+  
+      if (response.status === 200) {
+        navigate("/Home");
+      }else{
+        toast.error("Wrong credentials",{autoClose:3000,position:"top-center"});
+      }
     }
-  }
+
   const handleEyeToggle = () => {
     setIsEyeToggle(!isEyeToggle)
   }
@@ -76,7 +84,6 @@ export default function Login() {
         <img src={LoginImg} alt="login" />
       </div>
     </div>
-    <ToastContainer/>
     </div>
     </>
   );

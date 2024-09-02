@@ -1,0 +1,23 @@
+.wishListSturcture{
+    display: grid;
+    margin-left: 4vw;
+    margin-top: 5vh;
+}
+.headingsWishlist{
+    display: flex;
+    gap: 8vh;
+    width: 40%;
+}
+.headingsWishlist > p{
+    font-size: 4vh;
+}
+.activeTab{
+    border-bottom:1px solid tomato;
+}
+.wishlistItemsSection{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1vw;
+    width: 95%;
+    height: auto;
+}

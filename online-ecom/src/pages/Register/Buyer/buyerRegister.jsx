@@ -1,7 +1,6 @@
 import React,{useState} from 'react';
 import styles from './buyerRegister.module.css'
 import buyerImg from "../../../assets/buyer.png"
-import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Visibility from '@mui/icons-material/Visibility';
@@ -15,12 +14,21 @@ const BuyerRegister = () => {
   const [password, setPassword] = useState("");
   const handleRegister = async(e) =>{
     e.preventDefault()
-    const response = await axios.post(`http://127.0.0.1:5000/buyerRegister`,{username,email,password,phone,access:"buyer"});
+    const response = await fetch(`http://127.0.0.1:5000/buyerRegister`,
+      {
+        method:"POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify({
+          username,email,password,phone,access:"buyer"
+        })
+      });
     console.log(response.status)
     if(response.status === 200){
       naviagte("/Home")
     }else if(response.status == 409){
-      console.log(response)
+      toast.warn("User already exists",{autoClose:3000,position:"top-center"})
       naviagte("/Login")
     }
     else{

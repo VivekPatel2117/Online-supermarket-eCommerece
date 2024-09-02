@@ -2,6 +2,7 @@
     display: grid;
     grid-template-columns: 2fr 5fr 2fr;
     width: 100%;
+    overflow: hidden;
     height: 10vh;
     background-color: #9dcd5a;
     align-items: center;

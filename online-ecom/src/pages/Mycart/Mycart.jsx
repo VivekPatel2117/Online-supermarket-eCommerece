@@ -7,13 +7,15 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 export default function Mycart() {
   return (
-    <>
+    <div style={{backgroundColor:"rgb(246 241 241)"}}>
     <Navbar/>
     <div className={styles.MycartWrapper}>
-            <div className="headings">
+            <div className={styles.headings}>
                 <h1>Shopping cart</h1>
             </div>
         <div className={styles.structure}>
+            <div className={styles.carts}>
+             
             <div className={styles.cartItems}>
                 {/* Mapping function */}
                     <div className={styles.productImg}>
@@ -24,7 +26,7 @@ export default function Mycart() {
                             <h4>Fresh Apples</h4>
                             <p>5 kg</p>
                         </div>
-                        <div className="descQuantity">
+                        <div className={styles.descPrice}>
                             <p> <CurrencyRupee/>250</p>
                         </div>
                         <div className={styles.actions}>
@@ -38,7 +40,7 @@ export default function Mycart() {
                                 </button>
                             </div>
                             <div className={styles.removeItem}>
-                                <p>delete</p>
+                                <p>Delete</p>
                             </div>
                             <div className={styles.wishlistItem}>
                                 <p>Wishlist</p>
@@ -46,20 +48,161 @@ export default function Mycart() {
                         </div>
                     </div>
             </div>
+                    <hr />
+            <div className={styles.cartItems}>
+                {/* Mapping function */}
+                    <div className={styles.productImg}>
+                        <img src={fruits} alt="freshmart" />
+                    </div>
+                    <div className={styles.description}>
+                        <div className={styles.descHead}>
+                            <h4>Fresh Apples</h4>
+                            <p>5 kg</p>
+                        </div>
+                        <div className={styles.descPrice}>
+                            <p> <CurrencyRupee/>250</p>
+                        </div>
+                        <div className={styles.actions}>
+                            <div className={styles.updateQuantity}>
+                                <button>
+                                    <AddIcon/>
+                                 </button>
+                                <p>5</p>
+                                <button>
+                                <RemoveIcon/>
+                                </button>
+                            </div>
+                            <div className={styles.removeItem}>
+                                <p>Delete</p>
+                            </div>
+                            <div className={styles.wishlistItem}>
+                                <p>Wishlist</p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <hr />
+            <div className={styles.cartItems}>
+                {/* Mapping function */}
+                    <div className={styles.productImg}>
+                        <img src={fruits} alt="freshmart" />
+                    </div>
+                    <div className={styles.description}>
+                        <div className={styles.descHead}>
+                            <h4>Fresh Apples</h4>
+                            <p>5 kg</p>
+                        </div>
+                        <div className={styles.descPrice}>
+                            <p> <CurrencyRupee/>250</p>
+                        </div>
+                        <div className={styles.actions}>
+                            <div className={styles.updateQuantity}>
+                                <button>
+                                    <AddIcon/>
+                                 </button>
+                                <p>5</p>
+                                <button>
+                                <RemoveIcon/>
+                                </button>
+                            </div>
+                            <div className={styles.removeItem}>
+                                <p>Delete</p>
+                            </div>
+                            <div className={styles.wishlistItem}>
+                                <p>Wishlist</p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <hr />
+            <div className={styles.cartItems}>
+                {/* Mapping function */}
+                    <div className={styles.productImg}>
+                        <img src={fruits} alt="freshmart" />
+                    </div>
+                    <div className={styles.description}>
+                        <div className={styles.descHead}>
+                            <h4>Fresh Apples</h4>
+                            <p>5 kg</p>
+                        </div>
+                        <div className={styles.descPrice}>
+                            <p> <CurrencyRupee/>250</p>
+                        </div>
+                        <div className={styles.actions}>
+                            <div className={styles.updateQuantity}>
+                                <button>
+                                    <AddIcon/>
+                                 </button>
+                                <p>5</p>
+                                <button>
+                                <RemoveIcon/>
+                                </button>
+                            </div>
+                            <div className={styles.removeItem}>
+                                <p>Delete</p>
+                            </div>
+                            <div className={styles.wishlistItem}>
+                                <p>Wishlist</p>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            </div>
             <div className={styles.recommended}>
-                <div className="summary">
-                    <div className="amount">
-                        <p>Subtotal</p>
-                        <span>Items (5)</span>
-                        <span><CurrencyRupee/> 500</span>
+                <div className={styles.subTotal}>
+                    <div className={styles.subtotalAmt}>
+                        <p>Subtotal Items (5): </p>
+                        <CurrencyRupee/>
+                        <span>500</span>
                     </div>
-                    <div className="buyNow">
-                        <button>Proced to buy</button>
+                    <div className={styles.proceedToBuyBTtn}>
+                        <button>Proceed to buy</button>
                     </div>
+                </div>
+                <div className={styles.pairUpItems}>
+                    <h1 style={{marginTop:"2vh"}}>Pair with your cart</h1>
+                    <div className={styles.itemsBox}>
+                            <div className={styles.imgBox}>
+                                <img src={fruits} alt="fruits" />
+                            </div>
+                            <div className={styles.itemsBoxDesc}>
+                                <h4>American apple fresh from farms</h4>
+                                <p><CurrencyRupee/>399.00</p>
+                                <div className={styles.addCart}>
+                                    <button>Add to cart</button>
+                                </div>
+                                </div>
+                    </div>
+
+                    <div className={styles.itemsBox}>
+                            <div className={styles.imgBox}>
+                                <img src={fruits} alt="fruits" />
+                            </div>
+                            <div className={styles.itemsBoxDesc}>
+                                <h4>American apple fresh from farms</h4>
+                                <p><CurrencyRupee/>399.00</p>
+                                <div className={styles.addCart}>
+                                    <button>Add to cart</button>
+                                </div>
+                                </div>
+                    </div>
+
+                    <div className={styles.itemsBox}>
+                            <div className={styles.imgBox}>
+                                <img src={fruits} alt="fruits" />
+                            </div>
+                            <div className={styles.itemsBoxDesc}>
+                                <h4>American apple fresh from farms</h4>
+                                <p><CurrencyRupee/>399.00</p>
+                                <div className={styles.addCart}>
+                                    <button>Add to cart</button>
+                                </div>
+                                </div>
+                    </div>
+                </div>
                 </div>
             </div>
         </div>
     </div>
-    </>
   )
 }

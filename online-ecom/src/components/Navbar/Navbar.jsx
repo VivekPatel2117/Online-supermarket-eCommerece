@@ -13,9 +13,7 @@ export default function Navbar() {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate()
   const handleNavigation = (value) =>{
-    if(value === "cart"){
-        navigate("/Mycart")
-    }
+        navigate(`/${value}`)
   }
   const handleInput = (value) =>{
     const labelTag = document.getElementById("searchLabel")
@@ -61,9 +59,9 @@ export default function Navbar() {
       </div>
       <div className={styles.iconsWrapper}>
         <div className={styles.icons}>
-          <p onClick={()=>handleNavigation("cart")}><ShoppingCartOutlinedIcon fontSize={"large"}/></p>
-          <p><FavoriteBorderIcon fontSize="large"/></p>
-          <p><PersonOutlineIcon fontSize="large" /></p>
+          <p onClick={()=>handleNavigation("Mycart")}><ShoppingCartOutlinedIcon fontSize={"large"}/></p>
+          <p onClick={()=>handleNavigation("wishlist")}><FavoriteBorderIcon fontSize="large"/></p>
+          <p onClick={()=>handleNavigation("profileSection")}><PersonOutlineIcon fontSize="large" /></p>
         </div>
       </div>
     </div>

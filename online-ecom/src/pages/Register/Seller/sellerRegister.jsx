@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styles from './sellerRegister.module.css';
 import SellerRegisterImg from "../../../assets/seller2.png";
-import axios from 'axios';
 import {Link} from "react-router-dom"
 const SellerRegister = () => {
     const [fullName, setFullName] = useState('');
@@ -11,7 +10,14 @@ const SellerRegister = () => {
 
     const handleSubmit = async(event) => {
         event.preventDefault();
-        const response = await axios.post(`http://127.0.0.1:5000/sellerRegister`,{username:fullName,phone:phoneNumber,email,password,access:"seller"})
+        const response = await fetch(`http://127.0.0.1:5000/sellerRegister`,{
+            method:"POST",
+                headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body:JSON.stringify({
+                      username:fullName,phone:phoneNumber,email,password,access:"seller"})
+                  })
         if(response.status === 200){
             naviagte("/Home")
           }else if(response.status == 409){
