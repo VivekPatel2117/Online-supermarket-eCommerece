@@ -1,0 +1,93 @@
+.footer {
+    background-color:rgb(255, 146, 57);
+    padding: 40px 0;
+    margin-top: 5vh;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+  }
+  
+  .container {
+    display: flex;
+    justify-content: space-between;
+    max-width: 100%;
+    margin: 0 2vw;
+    margin-top: 5vh;
+    flex-wrap: wrap;
+  }
+  
+  .row {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  .column {
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .about {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+  
+  .title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .link {
+    color: #333;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+  
+  .link:hover {
+    color: #007BFF;
+  }
+  
+  .contactItem {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .socialLinks {
+    display: flex;
+    gap: 15px;
+  }
+  
+  .socialLink {
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  
+  .socialLink:hover {
+    color: #007BFF;
+  }
+  
+  .bottomBar {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    margin-top: 20px;
+  }
+  

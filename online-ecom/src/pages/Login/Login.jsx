@@ -7,21 +7,33 @@ import LoginImg from "../../assets/login.png";
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import axios from "axios"
+import { Alert } from "@mui/material";
 export default function Login() {
   const navigate = useNavigate();
   const [isEyeToggle, setIsEyeToggle] = useState(false);
   const [userName, setUserName] = useState("")
-  const [password, setPassword] = useState("")
+  const [password, setPassword] = useState("");
+  const [isAlert, setIsAlert] = useState(false);
   const handleSubmit = async() => {
     const response = await axios.post("http://127.0.0.1:5000/login",{username:userName,password});
+    console.log("Hello");
+    console.log(response.status)
     if(response.status === 200){
       navigate("/Home")
+    }else if (response){
+      setIsAlert(true)
+      alert("Wrong credentials");
     }
   }
   const handleEyeToggle = () => {
     setIsEyeToggle(!isEyeToggle)
   }
   return (
+    <>{isAlert && (
+     <Alert severity="warning" onClose={() => {setIsAlert(false)}}>
+       Error
+      </Alert>
+    )}
     <div className={styles.loginWrapper}>
     <div className={styles.container}>
       <div className={styles.loginCard}>
@@ -49,7 +61,7 @@ export default function Login() {
               <button onClick={handleSubmit}>Login</button>
             </div>
             <h4 className={styles.alreadyUserH4} style={{ padding: "1vh" }}>
-              <Link style={{textDecoration:"none"}} to={"/buyer"}><p style={{textDecoration:"none",color:"gray"}}>Already a user?</p></Link>
+              <p style={{textDecoration:"none",color:"gray"}}>Don't have an account? <Link style={{textDecoration:"none"}} to={"/buyer"}>Sign up now</Link></p>
               </h4>
             <div className={styles.formDivider}>
               <h3>OR Login with</h3>
@@ -66,5 +78,6 @@ export default function Login() {
     </div>
     <ToastContainer/>
     </div>
+    </>
   );
 }

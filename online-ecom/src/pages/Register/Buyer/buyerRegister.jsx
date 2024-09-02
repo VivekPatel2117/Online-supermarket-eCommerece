@@ -15,7 +15,7 @@ const BuyerRegister = () => {
   const [password, setPassword] = useState("");
   const handleRegister = async(e) =>{
     e.preventDefault()
-    const response = await axios.post("http://127.0.0.1:5000//buyerRegister",{username,email,password,phone});
+    const response = await axios.post(`http://127.0.0.1:5000/buyerRegister`,{username,email,password,phone,access:"buyer"});
     console.log(response.status)
     if(response.status === 200){
       naviagte("/Home")

@@ -1,0 +1,73 @@
+.MycartWrapper{
+    display: grid;
+    height: 100%;
+    width: 100%;
+    margin:0vh 2vh;
+}
+.structure{
+    display: grid;
+    grid-template-columns: 5fr 2fr;
+}
+.cartItems{
+    display: grid;
+    grid-template-columns: 2fr 5fr ;
+   border: 1px solid; 
+   padding: 2vh 2vh;
+}
+.recommended{
+    border: 1px solid saddlebrown;
+}
+.description{
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    margin: 2vh;
+}
+.actions{
+    display: flex;
+    justify-content: space-around;
+    height: 100%;
+    align-items: end;
+}
+.updateQuantity{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    gap: 2vh;
+    border: 1px solid;
+    height: 5vh;
+    width: 40%;
+}
+.descHead{
+    display: grid;
+}
+.descHead > h4{
+    font-size: 5vh;
+    color: black;
+}
+.descHead > p{
+    font-size: 3vh;
+}
+.updateQuantity > button:nth-child(1){
+    background-color: #1a73e8;
+    border: none;
+    border-radius: 5px;
+}
+.updateQuantity > button:nth-child(3){
+    background-color: #1a73e8;
+    border: none;
+    border-radius: 5px;
+}
+.updateQuantity > p{
+    font-size: 4vh;
+}
+.removeItem,.wishlistItem{
+    display: flex;
+    width: 6vw;
+    height: 5vh;
+    align-items: center;
+}
+.removeItem > p,.wishlistItem > p{
+    width: 100%;
+    padding: 0 5px;
+    font-size: 3vh;
+}

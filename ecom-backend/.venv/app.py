@@ -59,7 +59,29 @@ def login():
         return jsonify({"status": "error", "message": f"Internal Error${str(e)}"}), 500
 
 @app.route("/buyerRegister", methods=['POST'])
-def register():
+def buyerRegister():
+    try:
+        data = request.json
+        username = data.get("username")
+        email = data.get("email")
+        phone = data.get("phone")
+        existing_user = collection.find_one({"$or": [{"username": username}, {"email": email}, {"phone": phone}]})
+
+        if existing_user:
+            return jsonify({"status": "error", "message": "User already exists"}), 409
+
+        res = collection.insert_one(data)
+
+        if res.acknowledged:
+            return jsonify({"status": "success", "message": "New user Registered!"}), 200
+        else:
+            return jsonify({"status": "error", "message": "Error while inserting into DB"}), 500
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
+
+@app.route("/sellerRegister", methods=['POST'])
+def sellerRegister():
     try:
         data = request.json
         username = data.get("username")

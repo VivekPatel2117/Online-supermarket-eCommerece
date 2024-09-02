@@ -11,6 +11,8 @@ import Bevrages from "../../assets/Beverages.png";
 import DairyProducts from "../../assets/DairyProducts.png";
 import Vegetables from "../../assets/Vegetables.png";
 import Navbar from "../../components/Navbar/Navbar";
+import Footer from "../../components/Footer/Footer";
+import Grains from "../../assets/grains.jpg"
 export default function Home() {
   const imgArr = [img1, img2, img3];
   return (
@@ -23,7 +25,7 @@ export default function Home() {
         </div>
         <div className={styles.horizontalBoxGrid}>
           <div className={styles.horizontalBox}>
-            <img src={DairyProducts} alt="fruits" />
+            <img src={Grains} alt="fruits" />
           </div>
           <div className={styles.horizontalBox}>
             <img src={DairyProducts} alt="package food" />
@@ -45,6 +47,7 @@ export default function Home() {
       <ProductsSection title={"Everyday Essentails"} />
       <ProductsSection title={"For you"} />
       </div>
+      <Footer/>
     </div>
   );
 }
