@@ -10,6 +10,7 @@ import SellerRegister from './pages/Register/Seller/sellerRegister';
 import WishList from './pages/WishList/WishList';
 import ProfileSection from './pages/ProfileSection/ProfileSection';
 import { ToastContainer } from 'react-toastify';
+import SellerHome from './SellerHome/SellerHome';
 function App() {
   return (
   <>
@@ -23,6 +24,7 @@ function App() {
     <Route path='/seller' element={<SellerRegister/>}/>
     <Route path='/wishlist' element={<WishList/>}/>
     <Route path='/profileSection' element={<ProfileSection/>}/>
+    <Route path='/SellerHome' element={<SellerHome/>} />
   </Routes>
   </BrowserRouter>
   </>

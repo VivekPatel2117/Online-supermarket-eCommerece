@@ -29,7 +29,8 @@
   padding: 5px;
 }
   .logoDiv {
-    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
   }
   .inputDiv{
     display: flex;
