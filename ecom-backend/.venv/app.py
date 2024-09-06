@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from pymongo import MongoClient, errors
-from flask_cors import CORS
+from flask_cors import CORS # type: ignore
 from bson import ObjectId
 
 app = Flask(__name__)
@@ -225,6 +225,18 @@ def update_user_details(user_id):
     except Exception as e:
          print(f"ERROR: {str(e)}")
          return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
-
+@app.route('/get_all_products/<category>',methods=['GET'])
+def get_all_products(category):
+    try:
+        data = products_collection.find({"category": category })
+        docs = serialize_mongo_documents(data)
+        if docs:
+            return jsonify({"message":"Data fetched successffuly","data":docs}),200
+        else:
+            return jsonify({"message":"No products found","data":docs}),400
+    except Exception as e :
+         print(f"ERROR: {str(e)}")
+         return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
+  
 if __name__ == '__main__':
     app.run(debug=True)
