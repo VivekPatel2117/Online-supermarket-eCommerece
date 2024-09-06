@@ -66,6 +66,15 @@ const ProductCard = ({
       toast.error("Error while deleting product",{autoClose:3000,position:"top-center"})
     }
   }
+  const truncateDescription = (description, maxLength) => {
+    // Check if the length of the description exceeds the maximum length
+    if (description.length > maxLength) {
+      // Return the truncated description with ellipsis
+      return description.slice(0, maxLength) + "...";
+    }
+    // Return the original description if it doesn't exceed the maximum length
+    return description;
+  };
   return (
     <div className={styles.card} style={{ height: heightVal ? heightVal : "" }}>
       <div className={styles.img}>
@@ -78,7 +87,7 @@ const ProductCard = ({
         <h3>
           {name}
           <br />
-          <p>{description}</p>
+          <p style={{fontSize:"2vh"}}>{truncateDescription(description,15)}</p>
         </h3>
         <p className={styles.price}>₹{price}</p>
         {isMapped && (

@@ -49,16 +49,11 @@ export default function SellerHome() {
     setProductImage(e.target.files[0]);
   };
   const handleQuantityChangeAdd = () => {
-    if (quantity >= 0) {
-      setQuantity(quantity + 1);
-    }
+    setQuantity(prevQuantity => prevQuantity + 1);
   };
+  
   const handleQuantityChangeMinus = () => {
-    if (quantity === 0) {
-      setQuantity(0);
-    } else if (quantity > 0) {
-      setQuantity(quantity - 1);
-    }
+    setQuantity(prevQuantity => (prevQuantity > 0 ? prevQuantity - 1 : 0));
   };
 
   const handleSubmit = async (e) => {
@@ -94,6 +89,7 @@ export default function SellerHome() {
         description,
         "quantity":quantity,
         "price":price,
+        category,
       }),
     });
     if(res.status === 200){

@@ -73,7 +73,7 @@ const ProfileSection = () => {
             data.append("file", ImgFile);
             data.append("upload_preset", "freshmart");
             data.append("cloud_name", "Pillai-ig");
-            toast.warn("Please wait while we are adding a new product",{autoClose:3000,position:"top-center"});
+            toast.warn("Please wait while we are aupdating your profile",{autoClose:3000,position:"top-center"});
             setIsLoading(true);
             const response = await fetch(
                 "https://api.cloudinary.com/v1_1/Pillai-ig/image/upload",

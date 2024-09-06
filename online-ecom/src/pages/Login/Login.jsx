@@ -32,7 +32,11 @@ export default function Login() {
         const id = data.id;
         localStorage.setItem("access",access)
         localStorage.setItem("id",id)
-        navigate("/Home");
+        if(access === "seller"){
+          navigate("/SellerHome")
+        }else{
+          navigate("/Home");
+        }
       }else{
         toast.error("Wrong credentials",{autoClose:3000,position:"top-center"});
       }

@@ -13,7 +13,7 @@ export default function Navbar({handleChange}) {
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate()
   const handleNavigation = (value) =>{
-        navigate(`/${value}`)
+        navigate(`/${value}/${localStorage.getItem("id")}`)
   }
   const handleInput = (value) =>{
     const labelTag = document.getElementById("searchLabel")

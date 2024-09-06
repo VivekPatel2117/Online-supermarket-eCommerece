@@ -53,7 +53,7 @@ export default function Home() {
         </div>
       </div>
       <div style={{display:"grid",gridTemplateRows:"auto"}}>
-      <ProductsSection title={"Best Selling"} />
+      <ProductsSection constraint={"Dairy"} title={"Breads & Dairy"} />
       <ProductsSection title={"Featured"} />
       <ProductsSection title={"Everyday Essentails"} />
       <ProductsSection title={"For you"} />

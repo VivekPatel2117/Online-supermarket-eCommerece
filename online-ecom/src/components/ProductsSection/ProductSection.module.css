@@ -1,40 +1,48 @@
-.ProductsSectionWrapper{
+.ProductsSectionWrapper {
     width: 98%;
-    height: 50vh;
+    height: 60vh;
     display: grid;
     grid-template-rows: 1fr 5fr;
     gap: 3vh;
     margin: 3vh;
 }
-.ProductsSectionProduct{
+
+.ProductsSectionProduct {
     display: flex;
-    width: 90vw;
-    height: 50vh;
-    overflow-x: auto;
-    overflow-y: hidden;
+    width: 100%; /* Ensure full width */
+    position: relative;
+    height: 55vh;
+    overflow: hidden; /* Hide overflow for proper scrolling */
     align-items: center;
 }
-.ProductsSectionHeading{
+
+.ProductsSectionHeading {
     margin-left: 2vw;
 }
-.ProductsSectionHeading > h1{
+
+.ProductsSectionHeading > h1 {
     color: black;
 }
-.products{
+
+.products {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start; /* Align items to start */
     gap: 2vw;
-    width: auto;
-    height: auto;
-    overflow-x: scroll;
-    animation: fadeOut 2s forwards;
-    animation-timeline: scroll();
+    width: 100%; /* Ensure full width */
+    height: 100%;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: hidden;
+    scroll-behavior: smooth; /* Smooth scrolling */
 }
-.products::-webkit-scrollbar{
-    display: none;
+
+.products::-webkit-scrollbar {
+    display: none; /* Hide scrollbar */
 }
-.left,.right{
-    position: relative;
+
+.left, .right {
+    position: absolute; /* Absolute positioning for scroll buttons */
+    top: 50%;
+    transform: translateY(-50%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -47,6 +55,13 @@
     height: 40px;
     cursor: pointer;
     font-weight: bolder;
+    z-index: 1; /* Ensure buttons are above other content */
+}
 
-    
+.left {
+    left: 0; /* Align to the left */
+}
+
+.right {
+    right: 0; /* Align to the right */
 }

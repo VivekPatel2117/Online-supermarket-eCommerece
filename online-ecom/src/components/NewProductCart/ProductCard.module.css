@@ -18,7 +18,6 @@
     height:30vh;
     overflow: hidden;
     display: flex;
-    border-bottom: 1px solid #ddd;
 }
 .img > img{
     height: 100%;

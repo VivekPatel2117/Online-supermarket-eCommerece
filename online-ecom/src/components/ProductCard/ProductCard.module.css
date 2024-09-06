@@ -1,7 +1,7 @@
 .ProductCardWrapper{
     display: flex;
     flex-direction: column;
-    height: 40vh;
+    height: 50vh;
     width: 20vw;
     background-color: white;
     border: 1px solid rgb(232, 232, 232);
@@ -14,6 +14,7 @@
     height: 100%;
     display: grid;
     justify-content: center;
+    overflow: hidden;
 }
 .productImgWrapper > img{
     display: block;
@@ -44,6 +45,6 @@
     border-radius: 5px;
 }
 .ProductCardWrapper:hover{
-    transform: translateY(-5%);
+    transform: translateY(-3%);
     transition: transform 0.5s ease;
 }
