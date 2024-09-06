@@ -5,29 +5,35 @@
     padding: 16px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     text-align: center;
-    height: 50vh;
+    height:65vh;
     width: inherit;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    display: grid;
+    grid-template-rows: 50% 50%;
     margin: 16px 0px;
+    overflow: hidden;
 }
 
-.card img {
+.card > .img {
     width: 100%;
-    height: 45%;
-    object-fit: cover;
+    height:30vh;
+    overflow: hidden;
+    display: flex;
     border-bottom: 1px solid #ddd;
 }
+.img > img{
+    height: 100%;
+    width: 100%;
+    object-fit: contain;
+}
 
-.card h3 {
+.card > h3 {
     font-size: 16px;
     margin: 8px 0;
     color: #333;
     flex-grow: 1;
 }
 
-.card p {
+.card > p {
     margin: 4px 0;
     color: #666;
     font-size: 14px;
@@ -59,7 +65,7 @@
     margin-bottom: 8px;
 }
 
-.card button {
+ .buttonYellow {
     background-color: #f0c14b;
     border: 1px solid #a88734;
     border-radius: 4px;

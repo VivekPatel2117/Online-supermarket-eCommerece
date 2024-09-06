@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import styles from './sellerRegister.module.css';
 import SellerRegisterImg from "../../../assets/seller2.png";
-import {Link} from "react-router-dom"
+import { toast } from 'react-toastify';
+import {Link,useNavigate} from "react-router-dom"
 const SellerRegister = () => {
     const [fullName, setFullName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
+    const navigate = useNavigate();
     const handleSubmit = async(event) => {
         event.preventDefault();
         const response = await fetch(`http://127.0.0.1:5000/sellerRegister`,{
@@ -19,10 +20,13 @@ const SellerRegister = () => {
                       username:fullName,phone:phoneNumber,email,password,access:"seller"})
                   })
         if(response.status === 200){
-            naviagte("/Home")
+            const data = await response.json();
+            localStorage.setItem("id",data.id);
+            localStorage.setItem("access","seller")
+            navigate("/SellerHome")
           }else if(response.status == 409){
-            console.log(response)
-            naviagte("/Login")
+            toast.error("User already exist",{autoClose:3000,position:"top-center"})
+            navigate("/")
           }
           else{
             toast.error("Internal error occured",{autoClose:3000,position:"top-center"})

@@ -2,3 +2,20 @@
 h1,h2,h3,h4,h5,h6{
   color: gray;
 }
+:root{
+  z-index: 0;
+}
+.spinner {
+  width: 4vh;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 4px solid #B45309;
+  border-right-color: white;
+  animation: s2 1s infinite linear;
+  z-index: 1;
+}
+.hidden{
+  display: none;
+}
+
+@keyframes s2 {to{transform: rotate(1turn)}}

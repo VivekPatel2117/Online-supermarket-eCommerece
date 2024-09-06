@@ -21,15 +21,18 @@ const BuyerRegister = () => {
           "Content-Type": "application/json",
         },
         body:JSON.stringify({
-          username,email,password,phone,access:"buyer"
+          username,email,password,phone,access:"user"
         })
       });
     console.log(response.status)
     if(response.status === 200){
+      const data = await response.json();
+      localStorage.setItem("id",data.id)
+      localStorage.setItem("access","user")
       naviagte("/Home")
     }else if(response.status == 409){
       toast.warn("User already exists",{autoClose:3000,position:"top-center"})
-      naviagte("/Login")
+      naviagte("/")
     }
     else{
       toast.error("Internal error occured",{autoClose:3000,position:"top-center"})

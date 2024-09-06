@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState} from "react";
 import styles from "./Home.module.css";
 import ProductsSection from "../../components/ProductsSection/ProductsSection";
 import Slider from "../../components/Slider/Slider";
@@ -13,11 +13,22 @@ import Vegetables from "../../assets/Vegetables.png";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import Grains from "../../assets/grains.jpg"
+import SearchPage from "../../components/SearchPage/SearchPage";
 export default function Home() {
   const imgArr = [img1, img2, img3];
+  const [searchInput, setSearchInput] = useState(null)
+  const handleChange =(value)=>{
+    setSearchInput(value)
+  }
   return (
     <div className={styles.HomeWrapper}>
-      <Navbar />
+      <Navbar handleChange={handleChange} />
+      {searchInput!=null && searchInput !="" ? (
+        <>
+        <SearchPage query={searchInput} />
+        </>
+      ):(
+        <>
       <Slider images={imgArr} />
       <div className={styles.productCategoryGrid}>
         <div className={styles.verticalBox}>
@@ -48,6 +59,8 @@ export default function Home() {
       <ProductsSection title={"For you"} />
       </div>
       <Footer/>
+        </>
+      )}
     </div>
   );
 }

@@ -6,7 +6,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../../assets/logo.png"
-export default function Navbar() {
+export default function Navbar({handleChange}) {
   const searchLabels = ["Apples", "Milk", "Butter"];
   const [currentLabel, setCurrentLabel] = useState(searchLabels[0]);
   const [animate, setAnimate] = useState(false);
@@ -23,6 +23,7 @@ export default function Navbar() {
       labelTag.style.visibility = "visible"
     }
     setSearchValue(value.target.value)
+    handleChange(value.target.value)
   }
   useEffect(() => {
     const interval = setInterval(() => {

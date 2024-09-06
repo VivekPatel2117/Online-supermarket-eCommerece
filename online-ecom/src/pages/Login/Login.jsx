@@ -24,9 +24,14 @@ export default function Login() {
           password,
         })
       });
-      console.log(response.status);
-  
+     
       if (response.status === 200) {
+        const data = await response.json()
+        console.log(data)
+        const access = data.access;
+        const id = data.id;
+        localStorage.setItem("access",access)
+        localStorage.setItem("id",id)
         navigate("/Home");
       }else{
         toast.error("Wrong credentials",{autoClose:3000,position:"top-center"});
