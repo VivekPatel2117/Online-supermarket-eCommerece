@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom'; // Import Link from react-router-dom
 import styles from './Footer.module.css'; // Assuming you're using CSS modules
 
 const Footer = () => {
@@ -18,10 +19,10 @@ const Footer = () => {
           <div className={styles.column}>
             <h4 className={styles.title}>Quick Links</h4>
             <ul className={styles.list}>
-              <li><a href="/about" className={styles.link}>About Us</a></li>
-              <li><a href="/shop" className={styles.link}>Shop</a></li>
-              <li><a href="/faq" className={styles.link}>FAQ</a></li>
-              <li><a href="/contact" className={styles.link}>Contact Us</a></li>
+              <li><Link to="/about" className={styles.link}>About Us</Link></li>
+              <li><Link to="/shop" className={styles.link}>Shop</Link></li>
+              <li><Link to="/faq" className={styles.link}>FAQ</Link></li>
+              <li><Link to="/contact" className={styles.link}>Contact Us</Link></li>
             </ul>
           </div>
 

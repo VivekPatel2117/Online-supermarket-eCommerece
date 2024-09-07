@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import { addToCart, removeFromCart } from "../../stores/cart";
-
+import { useNavigate } from "react-router-dom";
 export default function ProductCart({
   ProductImg,
   id,
@@ -14,13 +14,18 @@ export default function ProductCart({
   ProductName,
   ProductPrice,
 }) {
+  const navigate = useNavigate();
+  const handleNavigation = () => {
+    navigate(`/productDetails/${id}`)
+  }
   const [isClicked, setIsClicked] = useState(false);
   const carts = useSelector((store) => store.cart.item);
-  console.log(carts)
+  
   const [productQuantity, setProductQuantity] = useState(0);
   const dispatch = useDispatch();
 
   const handleCart = () => {
+    console.log(carts)
     setProductQuantity((prevQuantity) => prevQuantity + 1);
     setIsClicked(true);
     dispatch(
@@ -29,6 +34,7 @@ export default function ProductCart({
         quantity: 1,
       })
     );
+    console.log(carts)
   };
 
   const add = () => {
@@ -40,6 +46,7 @@ export default function ProductCart({
       }));
       return newQuantity;
     });
+    console.log(carts)
   };
 
   const remove = () => {
@@ -55,6 +62,7 @@ export default function ProductCart({
       }
       return newQuantity;
     });
+    console.log(carts)
   };
 
   const truncateDescription = (description, maxLength) => {
@@ -69,7 +77,7 @@ export default function ProductCart({
   return (
     <div className={styles.ProductCardWrapper}>
       <div className={styles.productImgWrapper}>
-        <img src={ProductImg} alt={ProductName} />
+        <img onClick={handleNavigation} src={ProductImg} alt={ProductName} />
       </div>
       <div className={styles.productDesc}>
         <div className={styles.Deschead}>

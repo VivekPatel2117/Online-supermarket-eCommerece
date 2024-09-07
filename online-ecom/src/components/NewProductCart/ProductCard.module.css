@@ -36,17 +36,22 @@
     margin: 4px 0;
     color: #666;
     font-size: 14px;
+    text-align: center;
 }
 
 .card .price {
     font-size: 18px;
     color: #000;
     margin: 8px 0;
+    text-align: center;
 }
-
+.actionsWrapper > p {
+    cursor: pointer;
+}
 .card .availability {
     color: #28a745;
     font-size: 14px;
+    text-align: center;
 }
 
 .card .fulfilled {

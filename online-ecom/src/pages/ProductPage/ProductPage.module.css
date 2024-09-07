@@ -1,0 +1,13 @@
+.productPageWrapper{
+    display: grid;
+    grid-template-rows: 5% 95%;
+    margin: 2vh 5vh;
+    height: 100vh;
+    width: 95%;
+}
+.products{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 3vh;
+
+}

@@ -323,6 +323,7 @@ export default function SellerHome() {
                     onChange={(e) => setCategory(e.target.value)}>
                     <option value="Fruits">Fruits</option>
                     <option value="Grains">Grains</option>
+                    <option value="Vegetables">Vegetables</option>
                     <option value="Dairy">Dairy</option>
                     <option value="Chips">Chips</option>
                     <option value="drinks">Drinks</option>

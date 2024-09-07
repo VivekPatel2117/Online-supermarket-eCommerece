@@ -1,29 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import styles from './SearchPage.module.css';
 import noFound from "../../assets/noFound.png";
-
+import { toast } from 'react-toastify';
+import ProductCard from '../NewProductCart/ProductCard';
 const SearchPage = ({ query }) => {
   const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(true); // Better state management for loading
+  const [loading, setLoading] = useState(true); 
 
-  // Mock search function
   const handleSearch = () => {
-    const mockResults = [
-      { id: 1, title: 'Result 1', description: 'This is the first search result' },
-      { id: 2, title: 'Result 2', description: 'This is the second search result' },
-      { id: 3, title: 'Result 3', description: 'This is the third search result' },
-    ];
-
-    setResults(mockResults.filter(result => result.title.toLowerCase().includes(query.toLowerCase())));
-    setLoading(false); // Stop the spinner when search is done
+    setTimeout(() => {
+      fetch(`http://127.0.0.1:5000/searchPage/${query.toLowerCase()}`,{
+        method:"GET",
+        headers:{
+          'Content-Type':'applicaion/json'
+        }
+      }).then((res)=>res.json())
+      .then((data)=>{
+        const searchData = data.products;
+        console.log(searchData)
+        searchData.map(item=>console.log(item))
+        setResults(searchData)
+        setLoading(false)
+      }).catch((err)=>{
+        setResults([])
+        setLoading(false)
+    })
+    }, 1500);
   };
-
   useEffect(() => {
     if (query && query.trim() !== "") {
       setLoading(true); // Show spinner while loading
       setTimeout(() => {
         handleSearch();
-      }, 2000); // Simulate a delay for search
+      }, 1500); // Simulate a delay for search
     }
   }, [query]);
 
@@ -48,13 +57,21 @@ const SearchPage = ({ query }) => {
             <img src={noFound} alt="No results found" className={styles.noFoundImage} />
           </div>
         )}
-
-        {results.length > 0 && results.map(result => (
-          <div key={result.id} className={styles.resultItem}>
-            <h2 className={styles.resultTitle}>{result.title}</h2>
-            <p className={styles.resultDescription}>{result.description}</p>
-          </div>
+      <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr 1fr",gap:"4vh"}}>
+        {results.length > 0 && results.map(item => (
+            <ProductCard
+            category={item.category}
+            isSeller={false}
+            isMapped={true}
+            imgUrl={item.imgUrl}
+            productId={item._id}
+            price={item.price}
+            quantity={item.quantity}
+            description={item.description}
+            name={item.productName}
+          />
         ))}
+      </div>
       </div>
     </div>
   );

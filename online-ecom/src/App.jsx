@@ -12,6 +12,7 @@ import ProfileSection from './pages/ProfileSection/ProfileSection';
 import { ToastContainer } from 'react-toastify';
 import SellerHome from './pages/SellerHome/SellerHome';
 import ProductPage from './pages/ProductPage/ProductPage';
+import ProductDetails from './pages/ProductDetails/ProductDetails';
 function App() {
   return (
   <>
@@ -23,10 +24,11 @@ function App() {
     <Route path='/Home' element={<Home/>} />
     <Route path='/Mycart' element={<Mycart/>} />
     <Route path='/seller' element={<SellerRegister/>}/>
-    <Route path='/wishlist' element={<WishList/>}/>
+    <Route path='/wishlist/:id' element={<WishList/>}/>
     <Route path='/profileSection/:user_id' element={<ProfileSection/>}/>
     <Route path='/SellerHome' element={<SellerHome/>} />
-    <Route path='/productPage/:product_id' element={<ProductPage/>} />
+    <Route path='/productPage/:category' element={<ProductPage/>} />
+    <Route path='/productDetails/:id' element={<ProductDetails/>} />
   </Routes>
   </BrowserRouter>
   </>

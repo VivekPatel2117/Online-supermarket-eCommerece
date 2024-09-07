@@ -1,0 +1,90 @@
+.ProductDetailsWrapper{
+    height: 100vh;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2vw;
+    padding: 5vh;
+}
+.leftSection{
+    display: grid;
+    height: auto;
+    width: 100%;
+    grid-template-rows: 1.5fr 1fr;
+    padding: 2vh;
+    gap: 1vh;
+    border-right: 1px solid rgba(128, 128, 128, 0.373);
+}
+.imgDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.373);
+}
+.imgDiv > img{
+    height: auto;
+    width: 50%;
+    display: block;
+    border-radius: 5px;
+}
+.productDesc{
+    display: grid;
+}
+.productName{
+    border-bottom: 1px solid rgba(128, 128, 128, 0.373);
+    margin-bottom: 4vh;
+}
+.descHeader{
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+}
+.rightSection{
+    display: grid;
+    height: 50%;
+    width: auto;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.373);
+    margin-top: 8vh;
+}
+.productQuantity > button{
+    width: 15%;
+    padding: 10px;
+    background: #f1ffdb;
+    border: 1px solid green;
+    border-radius: 5px;
+}
+.wishlistButton{
+    display: flex;
+    justify-content: space-between;
+    width: 40%;
+    align-items: center;
+    height: 5vh;
+}
+.wishlistButton > button{
+    padding: 12px;
+    border-radius: 5px;
+}
+.wishlistButton > button:nth-child(1){
+    border: 1px solid rgb(54, 244, 67);
+    background-color: white;
+}
+.wishlistButton > button:nth-child(2){
+    border: 1px solid rgb(100, 255, 48);
+    background-color: white;
+}
+.buynowBtn > button{
+    padding: 12px;
+    width: 20vw;
+    border: none;
+    background: #168816;
+    color: white;
+    border-radius: 5px;
+}
+.descHeader > h1,p{
+    text-align: left;
+    text-wrap: pretty;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: black;
+}

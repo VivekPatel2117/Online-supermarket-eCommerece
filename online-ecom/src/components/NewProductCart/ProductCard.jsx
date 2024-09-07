@@ -4,9 +4,12 @@ import Modal from "../Modal/Modal";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 const ProductCard = ({
   isSeller,
   imgUrl,
+  category,
+  isDelete,
   productId,
   description,
   name,
@@ -18,7 +21,10 @@ const ProductCard = ({
   isMapped,
   recall
 }) => {
-
+  const handleToast = () =>{
+    console.log("V")
+    toast.error("Feature coming soon",{autoClose:3000,position:"top-center"})
+  }
   const [quantityModal, setQuantityModal] = useState(false);
   const [quantityValue, setQuantityValue] = useState(quantity);
   const [deleteModal, setDeleteModal] = useState(false)
@@ -51,19 +57,58 @@ const ProductCard = ({
       toast.error("Error while upating quantity",{autoClose:3000,position:"top-center"})
     }
   }
+  const handleWishlist=()=>{
+    fetch(`http://127.0.0.1:5000/add_to_wishlist/${localStorage.getItem("id")}`,{
+        method:"POST",
+        headers:{
+            'Content-Type':'application/json'
+        },
+        body:JSON.stringify({
+            details:productId
+        })
+    })
+    .then((res)=> {
+        if(res.status === 200){
+            toast.success("Product added to wishlist",{autoClose:3000,position:"top-right"})
+        }
+    })
+    .catch((err)=>{
+        toast.error("Error while adding to wishlist",{autoClose:3000,position:"top-right"})
+    })
+   }
   const handleDeleteProduct = async () =>{
-    const response = await fetch(`http://127.0.0.1:5000/delete_product/${productId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if(response.status === 200){
-      toast.success("Deleted product successfully",{autoClose:3000,position:"top-center"})
-      setDeleteModal(false);
-      recall()
+    if(isSeller){
+      const response = await fetch(`http://127.0.0.1:5000/delete_product/${productId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if(response.status === 200){
+        toast.success("Deleted product successfully",{autoClose:3000,position:"top-center"})
+        setDeleteModal(false);
+        recall()
+      }else{
+        toast.error("Error while deleting product",{autoClose:3000,position:"top-center"})
+      }
     }else{
-      toast.error("Error while deleting product",{autoClose:3000,position:"top-center"})
+      fetch(`http://127.0.0.1:5000/remove_from_wishlist/${localStorage.getItem("id")}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body:JSON.stringify({
+          details:productId
+        })
+      }).then((response)=>{
+        if(response.status === 200){
+          toast.success("Product removed from wishlist",{autoClose:3000,position:"top-center"})
+          setDeleteModal(false);
+          recall()
+        }
+      }).catch((err)=>{
+          toast.error("Error while removing from wishlist product",{autoClose:3000,position:"top-center"})
+      })
     }
   }
   const truncateDescription = (description, maxLength) => {
@@ -75,10 +120,17 @@ const ProductCard = ({
     // Return the original description if it doesn't exceed the maximum length
     return description;
   };
+  const naviagte = useNavigate();
+  const handleNavigation = () =>{
+    naviagte(`/productDetails/${productId}`)
+  }
+  const seeMoreNavigation = (value) =>{
+    naviagte(`/productPage/${value}`)
+  }
   return (
-    <div className={styles.card} style={{ height: heightVal ? heightVal : "" }}>
+    <div className={styles.card}  style={{ height: heightVal ? heightVal : "" }}>
       <div className={styles.img}>
-        <img
+        <img onClick={handleNavigation}
           src={imgUrl != null ? imgUrl : "https://via.placeholder.com/300x300"}
           alt="Product"
         />
@@ -87,7 +139,7 @@ const ProductCard = ({
         <h3>
           {name}
           <br />
-          <p style={{fontSize:"2vh"}}>{truncateDescription(description,15)}</p>
+          <p style={{fontSize:"2vh",textAlign:"center"}}>{truncateDescription(description,15)}</p>
         </h3>
         <p className={styles.price}>₹{price}</p>
         {isMapped && (
@@ -95,20 +147,24 @@ const ProductCard = ({
         <p className={styles.availability}>
           {isSeller ? `Quanity: ${isMapped ? quantityValue : quantity}` : "In stock"}
         </p>
-        <button className={styles.buttonYellow}>{isSeller ? "Boost this Product" : "Move to cart"}</button>
-        <div style={{ display: "flex", justifyContent: "space-evenly" }}>
-          <p onClick={()=>setDeleteModal(true)}>Delete</p>
+        <button onClick={handleToast} className={styles.buttonYellow}>{isSeller ? "Boost this Product" : "Move to cart"}</button>
+        <div className={styles.actionsWrapper} style={{ display: "flex", justifyContent: "space-evenly" }}>
+          {isDelete ? (
+            <p onClick={()=>setDeleteModal(true)}>Delete |</p>
+          ):(
+            <p onClick={handleWishlist}>Wishlist |</p>
+          )}
           {isSeller ? (
             <p onClick={() => setQuantityModal(true)}>
             Add more Quantity
           </p>
           ):(
             <p>
-            Add to list
+            Buy now |
           </p>
           )}
             
-          {!isSeller && <p>See more like this</p>}
+          {!isSeller && <p onClick={()=>seeMoreNavigation(category)}>See more</p>}
         </div>
             </>
         )}
