@@ -230,6 +230,7 @@ def get_all_products(category):
     try:
         data = products_collection.find({"category": category })
         docs = serialize_mongo_documents(data)
+        print(docs)
         if docs:
             return jsonify({"message":"Data fetched successffuly","data":docs}),200
         else:
@@ -238,5 +239,146 @@ def get_all_products(category):
          print(f"ERROR: {str(e)}")
          return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
   
+@app.route('/get_product_details/<product_id>',methods=['GET'])
+def get_product_details(product_id):
+    try:
+        if product_id == "":
+            return jsonify({"error":"Product id is undefined"}), 404
+        res = products_collection.find_one({'_id':ObjectId(product_id)})
+        if res != "":
+            res['_id'] = str(res['_id'])
+            return jsonify({"message":"Details retrived","data":res}), 200
+        else:
+            return jsonify({"error":"Product Not found in db"}), 404
+    except Exception as e:
+         print(f"ERROR: {str(e)}")
+         return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
+
+@app.route('/add_to_wishlist/<id>', methods=['POST'])
+def add_to_wishlist(id):
+    try:
+        data = request.json
+        product_details = data.get("details")
+        
+        if not id or not product_details:
+            return jsonify({"error": "User ID or product details missing"}), 400
+
+        # Find user and get only the wishList field
+        user = collection.find_one({'_id': ObjectId(id)}, {"wishList": 1})
+        
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+        
+        wishlist_arr = user.get("wishList", [])
+        
+        if isinstance(wishlist_arr, list):
+            # Check if the product is already in the wishlist
+            if product_details in wishlist_arr:
+                return jsonify({"message": "Product already in wishlist"}), 200
+
+            # Push the new product details to the wishlist array
+            result = collection.update_one(
+                {'_id': ObjectId(id)},
+                {"$push": {'wishList': product_details}}
+            )
+
+            if result.modified_count > 0:
+                return jsonify({"message": "Added to wishlist"}), 200
+            else:
+                return jsonify({"message": "Failed to add to wishlist"}), 500
+        else:
+            return jsonify({"error": "Wishlist is not in a valid format"}), 400
+    except Exception as e:
+        print(f"ERROR: {str(e)}")
+        return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
+
+@app.route('/get_user_wishlist/<user_id>',methods=['GET'])
+def get_user_wishlist(user_id):
+    try:
+        wishlist =[]
+        find_user = collection.find_one({'_id':ObjectId(user_id)}, {'_id': 0, 'wishList': 1})
+        if find_user != "":
+            product_ids = find_user.get("wishList")
+            for id in product_ids:
+                find_products = products_collection.find_one({'_id':ObjectId(id)})
+                find_products['_id'] = str(find_products['_id'])
+                wishlist.append(find_products)
+            return jsonify({"status": "success", "message":"Data","data":wishlist}), 200
+        else:
+            return jsonify({"error":"Error while finding the wishlist"}),400
+
+    except Exception as e:
+          print(f"ERROR: {str(e)}")
+          return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
+
+@app.route('/remove_from_wishlist/<id>', methods=['POST'])
+def remove_from_wishlist(id):
+    try:
+        data = request.json
+        product_details = data.get("details")
+
+        if not id or not product_details:
+            return jsonify({"error": "User ID or product details missing"}), 400
+
+        # Find user and get only the wishList field
+        user = collection.find_one({'_id': ObjectId(id)}, {"wishList": 1})
+
+        if not user:
+            return jsonify({"error": "User not found"}), 404
+
+        wishlist_arr = user.get("wishList", [])
+
+        if isinstance(wishlist_arr, list):
+            # Check if the product is in the wishlist
+            if product_details not in wishlist_arr:
+                return jsonify({"message": "Product not found in wishlist"}), 404
+
+            # Pull the product details from the wishlist array
+            result = collection.update_one(
+                {'_id': ObjectId(id)},
+                {"$pull": {'wishList': product_details}}
+            )
+
+            if result.modified_count > 0:
+                return jsonify({"message": "Removed from wishlist"}), 200
+            else:
+                return jsonify({"message": "Failed to remove from wishlist"}), 500
+        else:
+            return jsonify({"error": "Wishlist is not in a valid format"}), 400
+    except Exception as e:
+        print(f"ERROR: {str(e)}")
+        return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
+@app.route('/searchPage/<query>',methods=['GET'])
+def searchPage(query):
+    try:
+        query = str(query)
+        if not query:
+            return jsonify({"error": "Search query is missing"}), 400
+
+        # Define the search criteria with regex for case-insensitive matching
+        search_criteria = {
+            "$or": [
+                {"productName": {"$regex": query, "$options": "i"}},
+                {"category": {"$regex": query, "$options": "i"}},
+                {"description": {"$regex": query, "$options": "i"}}
+            ]
+        }
+
+        # Perform the search in the 'product_collection'
+        search_results = list(products_collection.find(search_criteria))
+
+        # If no products found, return an appropriate message
+        if not search_results:
+            return jsonify({"message": "No products found"}), 404
+
+        # Convert ObjectId to string and return search results
+        for product in search_results:
+            product['_id'] = str(product['_id'])
+
+        return jsonify({"products": search_results}), 200
+
+    except Exception as e:
+        print(f"ERROR: {str(e)}")
+        return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
 if __name__ == '__main__':
     app.run(debug=True)
