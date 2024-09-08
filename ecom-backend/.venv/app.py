@@ -118,7 +118,6 @@ def sellerRegister():
 def add_products():
     try:
         data = request.json
-        print(data)
         user_id = str(data.get("user_id"))
         if (user_id == "" ):
             return jsonify({"message" : "Invalid request from user"}),500
@@ -194,7 +193,6 @@ def user_detail(user_id):
         if(user_id == ""):
             return
         data = collection.find_one({"_id":ObjectId(user_id)})
-        print(data)
         data['_id'] = str(data['_id'])
         if(data):
             return jsonify({"message":"User found","data":data}),200
@@ -230,7 +228,6 @@ def get_all_products(category):
     try:
         data = products_collection.find({"category": category })
         docs = serialize_mongo_documents(data)
-        print(docs)
         if docs:
             return jsonify({"message":"Data fetched successffuly","data":docs}),200
         else:
@@ -380,5 +377,31 @@ def searchPage(query):
     except Exception as e:
         print(f"ERROR: {str(e)}")
         return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
+@app.route('/get_recommended/<id>',methods=['POST'])
+def get_recommended(id):
+    try:
+        category = request.json
+        category = category.get("category")
+        wishlist =[]
+        category_list =[]
+        find_user = collection.find_one({'_id':ObjectId(id)}, {'_id': 0, 'wishList': 1})
+        if find_user != "":
+            product_ids = find_user.get("wishList")
+            if product_ids !="":
+                for ids in product_ids:
+                    find_products = products_collection.find_one({'_id':ObjectId(ids)})
+                    find_products['_id'] = str(find_products['_id'])
+                    wishlist.append(find_products)
+        if category !="":
+            for category_name in category:
+                data = products_collection.find({"category": category_name }).limit(10)
+                docs = serialize_mongo_documents(data)
+                category_list.extend(docs) 
+
+        return jsonify({"message":"success","catgeory":category_list,"wishlist":wishlist}),200
+    except Exception as  e :
+         print(f"ERROR: {str(e)}")
+         return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
+
 if __name__ == '__main__':
     app.run(debug=True)
