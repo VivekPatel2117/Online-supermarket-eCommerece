@@ -13,6 +13,8 @@ import { ToastContainer } from 'react-toastify';
 import SellerHome from './pages/SellerHome/SellerHome';
 import ProductPage from './pages/ProductPage/ProductPage';
 import ProductDetails from './pages/ProductDetails/ProductDetails';
+import About from './pages/About/About';
+import TermsAndConditions from './pages/terms/TermsAndConditions';
 function App() {
   return (
   <>
@@ -22,13 +24,15 @@ function App() {
     <Route path='/' index element={<Login/>} />
     <Route path='/buyer' element={<BuyerRegister/>} />
     <Route path='/Home' element={<Home/>} />
-    <Route path='/Mycart' element={<Mycart/>} />
+    <Route path='/Mycart/:user_id' element={<Mycart/>} />
     <Route path='/seller' element={<SellerRegister/>}/>
     <Route path='/wishlist/:id' element={<WishList/>}/>
     <Route path='/profileSection/:user_id' element={<ProfileSection/>}/>
     <Route path='/SellerHome' element={<SellerHome/>} />
+    <Route path='/about' element={<About/>} />
     <Route path='/productPage/:category' element={<ProductPage/>} />
     <Route path='/productDetails/:id' element={<ProductDetails/>} />
+    <Route path='/terms' element={<TermsAndConditions/>} />
   </Routes>
   </BrowserRouter>
   </>

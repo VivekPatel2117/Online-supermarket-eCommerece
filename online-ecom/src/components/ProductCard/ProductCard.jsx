@@ -4,8 +4,9 @@ import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import { useDispatch, useSelector } from "react-redux";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
-import { addToCart, removeFromCart } from "../../stores/cart";
+import cart, { addToCart, removeFromCart } from "../../stores/cart";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 export default function ProductCart({
   ProductImg,
   id,
@@ -18,15 +19,29 @@ export default function ProductCart({
   const handleNavigation = () => {
     navigate(`/productDetails/${id}`)
   }
+  const [pQuantity, setPQuantity] = useState(0)
   const [isClicked, setIsClicked] = useState(false);
   const carts = useSelector((store) => store.cart.item);
+  useEffect(() => {
+    console.log(carts)
+    if(carts.length > 0){
+      carts.map((item)=>{
+        console.log("PRODUCTID",item.productId,"ID",id)
+        if(item.productId === id){
+            setIsClicked(true)
+            setPQuantity(item.quantity)
+        }
+      })
+    }else{
+      setIsClicked(false);
+      setPQuantity(0)
+    }
+      
+  }, [carts])
   
-  const [productQuantity, setProductQuantity] = useState(0);
   const dispatch = useDispatch();
 
   const handleCart = () => {
-    console.log(carts)
-    setProductQuantity((prevQuantity) => prevQuantity + 1);
     setIsClicked(true);
     dispatch(
       addToCart({
@@ -34,36 +49,27 @@ export default function ProductCart({
         quantity: 1,
       })
     );
-    console.log(carts)
   };
 
   const add = () => {
-    setProductQuantity((prevQuantity) => {
-      const newQuantity = prevQuantity + 1;
       dispatch(addToCart({
         productId: id,
-        quantity: newQuantity,
+        quantity: 1,  
       }));
-      return newQuantity;
-    });
-    console.log(carts)
   };
-
+  
   const remove = () => {
-    setProductQuantity((prevQuantity) => {
-      const newQuantity = prevQuantity > 0 ? prevQuantity - 1 : 0;
-      if (newQuantity === 0) {
-       return;
-      } else {
+   
         dispatch(removeFromCart({
           productId: id,
-          quantity: 1,
+          quantity: 1, 
         }));
-      }
-      return newQuantity;
-    });
-    console.log(carts)
+        if(pQuantity === 0){
+          setIsClicked(false);
+          return
+        }
   };
+  
 
   const truncateDescription = (description, maxLength) => {
     // Check if the length of the description exceeds the maximum length
@@ -94,8 +100,8 @@ export default function ProductCart({
                 <div onClick={add}>
                   <AddOutlinedIcon color="white" />
                 </div>
-                {productQuantity}
-                <div onClick={remove} style={{ opacity: productQuantity === 0 ? 0.5 : 1 }}>
+                {pQuantity}
+                <div onClick={remove} style={{ opacity: carts.quantity === 0 ? 0.5 : 1 }}>
                   <RemoveOutlinedIcon color="white" />
                 </div>
               </div>

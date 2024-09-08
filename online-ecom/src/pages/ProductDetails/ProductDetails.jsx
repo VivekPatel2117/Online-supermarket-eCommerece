@@ -75,9 +75,6 @@ export default function ProductDetails() {
             <p>₹ {details.price}</p></h1>
         </div>
         <p style={{color:isAvailable ? "green" : "red"}}>{isAvailable ? "In stock" : "Out of stock"}</p>
-        <div className={styles.productQuantity}>
-            <button>Add</button>
-        </div>
         <div className={styles.wishlistButton}>
             <button onClick={handleWishlist}>Wishlist product</button>
             <button>Add to cart</button>

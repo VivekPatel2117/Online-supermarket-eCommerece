@@ -1,0 +1,32 @@
+.termsContainer {
+    background-color: white;
+    color: black;
+    padding: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .heading {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+  }
+  
+  .updated {
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+  
+  .section {
+    margin-bottom: 30px;
+  }
+  
+  .subHeading {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  
+  .paragraph {
+    font-size: 1.1em;
+    line-height: 1.6;
+  }
+  

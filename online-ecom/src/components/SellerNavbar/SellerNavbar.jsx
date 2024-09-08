@@ -8,7 +8,7 @@ export default function SellerNavbar() {
   return (
     <div className={styles.navbarWrapper}>
       <div className={styles.logoDiv}>
-        <Link to={"/Home"}>
+        <Link to={"/SellerHome"}>
         <img src={Logo} style={{margin:"1vh"}} height={50} width={50} alt="logo" />
         </Link>
         <p style={{fontSize:"4vh",marginBottom:"4px"}}>Freshmart Seller</p>

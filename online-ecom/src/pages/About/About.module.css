@@ -1,0 +1,93 @@
+.freshmartSection {
+   margin: 5vh;
+  }
+  
+  .freshmartRow {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .contentColumn {
+    margin-bottom: 50px;
+    padding-left: 30px;
+  }
+  
+  .innerColumn {
+    padding-left: 30px;
+  }
+  
+  .secTitle {
+    margin-bottom: 60px;
+  }
+  
+  .title {
+    font-size: 18px;
+    line-height: 24px;
+    color: #00aeef;
+    margin-bottom: 15px;
+  }
+  
+  .heading {
+    font-size: 40px;
+    color: #222222;
+    font-weight: 600;
+  }
+  
+  .text {
+    font-size: 16px;
+    line-height: 26px;
+    color: #848484;
+    margin-bottom: 20px;
+  }
+  
+  .btnBox {
+    margin-top: 30px;
+  }
+  
+  .themeBtn {
+    padding: 10px 30px;
+    background-color: #00aeef;
+    color: white;
+    font-weight: 600;
+  }
+  
+  .themeBtn:hover {
+    background-color: #0794c9;
+  }
+  
+  .imageColumn {
+    position: relative;
+  }
+  
+  .innerColumnImage {
+    padding-left: 80px;
+  }
+  
+  .authorDesc {
+    position: absolute;
+    bottom: 16px;
+    background: orange;
+    padding: 10px 15px;
+    left: 96px;
+    width: calc(100% - 152px);
+    border-radius: 50px;
+  }
+  
+  .authorDesc h2 {
+    font-size: 21px;
+    color: #fff;
+    margin: 0;
+  }
+  
+  .authorDesc span {
+    font-size: 16px;
+    letter-spacing: 6px;
+    color: #fff;
+    display: block;
+  }
+  
+  .image img {
+    box-shadow: 0 30px 50px rgba(8, 13, 62, 0.15);
+    border-radius: 46px;
+  }
+  

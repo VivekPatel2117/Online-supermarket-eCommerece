@@ -20,9 +20,9 @@ const Footer = () => {
             <h4 className={styles.title}>Quick Links</h4>
             <ul className={styles.list}>
               <li><Link to="/about" className={styles.link}>About Us</Link></li>
-              <li><Link to="/shop" className={styles.link}>Shop</Link></li>
-              <li><Link to="/faq" className={styles.link}>FAQ</Link></li>
-              <li><Link to="/contact" className={styles.link}>Contact Us</Link></li>
+              <li><Link to="/terms" className={styles.link}>Terms & Condition</Link></li>
+              <li><Link to="/" className={styles.link}>Seller login</Link></li>
+              <li><Link to="/seller" className={styles.link}>Seller Register</Link></li>
             </ul>
           </div>
 
