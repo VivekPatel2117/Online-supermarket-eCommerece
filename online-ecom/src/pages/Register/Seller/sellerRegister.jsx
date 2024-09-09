@@ -4,34 +4,65 @@ import SellerRegisterImg from "../../../assets/seller2.png";
 import { toast } from 'react-toastify';
 import {Link,useNavigate} from "react-router-dom"
 const SellerRegister = () => {
-    const [fullName, setFullName] = useState('');
+    const [userName, setuserName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
-    const handleSubmit = async(event) => {
+    const validateuserName = (name) => /^[^\s]+$/.test(name);
+
+    const validatePassword = (password) => 
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+    
+    const handleSubmit = (event) => {
         event.preventDefault();
-        const response = await fetch(`http://127.0.0.1:5000/sellerRegister`,{
-            method:"POST",
-                headers: {
-                    "Content-Type": "application/json",
-                  },
-                  body:JSON.stringify({
-                      username:fullName,phone:phoneNumber,email,password,access:"seller"})
-                  })
-        if(response.status === 200){
-            const data = await response.json();
-            localStorage.setItem("id",data.id);
-            localStorage.setItem("access","seller")
-            navigate("/SellerHome")
-          }else if(response.status == 409){
-            toast.error("User already exist",{autoClose:3000,position:"top-center"})
-            navigate("/")
-          }
-          else{
-            toast.error("Internal error occured",{autoClose:3000,position:"top-center"})
-          }
-        console.log({ fullName, phoneNumber, email, password });
+    
+        if (!validateuserName(userName)) {
+            toast.error("Full name should not contain spaces", { autoClose: 3000, position: "top-center" });
+            return;
+        }
+    
+        if (!validatePassword(password)) {
+            toast.error("Password must be at least 8 characters long and include an uppercase letter, a lowercase letter, a number, and a special character", { autoClose: 3000, position: "top-center" });
+            return;
+        }
+    
+        fetch(`http://127.0.0.1:5000/sellerRegister`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                username: userName,
+                phone: phoneNumber,
+                email: email,
+                password: password,
+                access: "seller"
+            })
+        })
+        .then(response => {
+            if (response.status === 200) {
+                return response.json();
+            } else if (response.status === 409) {
+                toast.error("User already exists", { autoClose: 3000, position: "top-center" });
+                navigate("/");
+                return Promise.reject('User already exists');
+            } else {
+                toast.error("Internal error occurred", { autoClose: 3000, position: "top-center" });
+                return Promise.reject('Internal error occurred');
+            }
+        })
+        .then(data => {
+            localStorage.setItem("id", data.id);
+            localStorage.setItem("access", "seller");
+            navigate("/SellerHome");
+        })
+        .catch(error => {
+            // Handle unexpected errors or rejection from the previous .then()
+            console.error('Error:', error);
+            toast.error("An unexpected error occurred", { autoClose: 3000, position: "top-center" });
+        });
+    
     };
 
     return (
@@ -44,8 +75,8 @@ const SellerRegister = () => {
                         <input
                             type="text"
                             required
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
+                            value={userName}
+                            onChange={(e) => setuserName(e.target.value)}
                         />
                         <label>Full name</label>
                     </div>

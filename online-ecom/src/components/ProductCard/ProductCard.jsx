@@ -47,6 +47,7 @@ export default function ProductCart({
       addToCart({
         productId: id,
         quantity: 1,
+        price:ProductPrice
       })
     );
   };
@@ -54,7 +55,8 @@ export default function ProductCart({
   const add = () => {
       dispatch(addToCart({
         productId: id,
-        quantity: 1,  
+        quantity: 1, 
+        price:ProductPrice
       }));
   };
   

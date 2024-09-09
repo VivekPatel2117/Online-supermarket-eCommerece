@@ -1,0 +1,87 @@
+/* Unique class names for styling */
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+    overflow: hidden; /* Ensure no scrollbars appear during animation */
+}
+
+.successBox {
+    text-align: center;
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+    height: 35vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5vh;
+    align-items: center;
+    width: 35vh;
+    transform: translateY(100vh); /* Start position off the screen */
+    animation: slideUp 1s forwards, fadeIn 0.5s 1s forwards; /* Slide up and then fade in */
+}
+
+.checkmarkIcon {
+    position: relative;
+    width: 15vh;
+    height: 15vh;
+    border: 5px solid green;
+    border-radius: 50%;
+    display: inline-block;
+    margin-bottom: 10px;
+    margin: 0 auto; /* Center the checkmark */
+}
+
+.checkmarkIcon::after {
+    content: "";
+    position: absolute;
+    top: -1.5%;
+    left: 23.5%;
+    width: 20px;
+    height: 40px;
+    border: solid green;
+    border-width: 0 5px 5px 0;
+    transform: rotate(45deg);
+    transform-origin: left bottom;
+    opacity: 0;
+    animation: checkmarkAnimation 0.5s 1.5s forwards; /* Animate checkmark after box is in place */
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100vh);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes checkmarkAnimation {
+    from {
+        opacity: 0;
+        transform: rotate(45deg) scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(45deg) scale(1);
+    }
+}
+
+.successMessage {
+    font-size: 18px;
+    color: green;
+}

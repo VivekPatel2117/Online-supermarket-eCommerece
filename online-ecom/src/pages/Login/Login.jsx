@@ -13,34 +13,47 @@ export default function Login() {
   const [userName, setUserName] = useState("")
   const [password, setPassword] = useState("");
   const [isAlert, setIsAlert] = useState(false);
-  const handleSubmit = async () => {
-      const response = await fetch("http://127.0.0.1:5000/login", {
-        method:"POST",
+
+const handleSubmit = (e) => {
+    e.preventDefault();
+
+    fetch("http://127.0.0.1:5000/login", {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
-        body:JSON.stringify({
-          username: userName,
-          password,
+        body: JSON.stringify({
+            username: userName,
+            password,
         })
-      });
-     
-      if (response.status === 200) {
-        const data = await response.json()
-        console.log(data)
+    })
+    .then(response => {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            toast.error("Wrong credentials", { autoClose: 3000, position: "top-center" });
+            return Promise.reject('Wrong credentials');
+        }
+    })
+    .then(data => {
+        console.log(data);
         const access = data.access;
         const id = data.id;
-        localStorage.setItem("access",access)
-        localStorage.setItem("id",id)
-        if(access === "seller"){
-          navigate("/SellerHome")
-        }else{
-          navigate("/Home");
+        localStorage.setItem("access", access);
+        localStorage.setItem("id", id);
+        if (access === "seller") {
+            navigate("/SellerHome");
+        } else {
+            navigate("/Home");
         }
-      }else{
-        toast.error("Wrong credentials",{autoClose:3000,position:"top-center"});
-      }
-    }
+    })
+    .catch(error => {
+        // Handle errors that occur during fetch or from rejected promises
+        console.error('Error:', error);
+        toast.error("An unexpected error occurred", { autoClose: 3000, position: "top-center" });
+    });
+};
+
 
   const handleEyeToggle = () => {
     setIsEyeToggle(!isEyeToggle)
@@ -75,7 +88,7 @@ export default function Login() {
               <label htmlFor="password">Password</label>
             </div>
             <div className={styles.loginBtn}>
-              <button onClick={handleSubmit}>Login</button>
+              <button type="submit" onClick={handleSubmit}>Login</button>
             </div>
             <h4 className={styles.alreadyUserH4} style={{ padding: "1vh" }}>
               <p style={{textDecoration:"none",color:"gray"}}>Don't have an account? <Link style={{textDecoration:"none"}} to={"/buyer"}>Sign up now</Link></p>

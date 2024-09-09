@@ -15,6 +15,7 @@ import ProductPage from './pages/ProductPage/ProductPage';
 import ProductDetails from './pages/ProductDetails/ProductDetails';
 import About from './pages/About/About';
 import TermsAndConditions from './pages/terms/TermsAndConditions';
+import Payment from './pages/payment/payment';
 function App() {
   return (
   <>
@@ -33,6 +34,7 @@ function App() {
     <Route path='/productPage/:category' element={<ProductPage/>} />
     <Route path='/productDetails/:id' element={<ProductDetails/>} />
     <Route path='/terms' element={<TermsAndConditions/>} />
+    <Route path='/payment/:amount' element={<Payment/>} />
   </Routes>
   </BrowserRouter>
   </>

@@ -12,32 +12,48 @@ const BuyerRegister = () => {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("")
   const [password, setPassword] = useState("");
-  const handleRegister = async(e) =>{
-    e.preventDefault()
-    const response = await fetch(`http://127.0.0.1:5000/buyerRegister`,
-      {
-        method:"POST",
+
+const handleRegister = (e) => {
+    e.preventDefault();
+
+    fetch(`http://127.0.0.1:5000/buyerRegister`, {
+        method: "POST",
         headers: {
-          "Content-Type": "application/json",
+            "Content-Type": "application/json",
         },
-        body:JSON.stringify({
-          username,email,password,phone,access:"user"
+        body: JSON.stringify({
+            username,
+            email,
+            password,
+            phone,
+            access: "user"
         })
-      });
-    console.log(response.status)
-    if(response.status === 200){
-      const data = await response.json();
-      localStorage.setItem("id",data.id)
-      localStorage.setItem("access","user")
-      naviagte("/Home")
-    }else if(response.status == 409){
-      toast.warn("User already exists",{autoClose:3000,position:"top-center"})
-      naviagte("/")
-    }
-    else{
-      toast.error("Internal error occured",{autoClose:3000,position:"top-center"})
-    }
-  }
+    })
+    .then(response => {
+        console.log(response.status);
+        if (response.status === 200) {
+            return response.json();
+        } else if (response.status === 409) {
+            toast.warn("User already exists", { autoClose: 3000, position: "top-center" });
+            navigate("/");
+            return Promise.reject('User already exists');
+        } else {
+            toast.error("Internal error occurred", { autoClose: 3000, position: "top-center" });
+            return Promise.reject('Internal error occurred');
+        }
+    })
+    .then(data => {
+        localStorage.setItem("id", data.id);
+        localStorage.setItem("access", "user");
+        navigate("/Home");
+    })
+    .catch(error => {
+        // Handle unexpected errors or rejection from the previous .then()
+        console.error('Error:', error);
+        toast.error("An unexpected error occurred", { autoClose: 3000, position: "top-center" });
+    });
+};
+
   return (
     <div className={styles.wrapperBody}>
       <div className={styles.parentWrapper}>
