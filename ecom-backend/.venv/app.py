@@ -34,6 +34,7 @@ except errors.ServerSelectionTimeoutError as err:
 
 
 products_collection = db['products']
+orders_collection = db['orders']
 def serialize_mongo_documents(cursor):
     documents = []
     for doc in cursor:
@@ -403,5 +404,32 @@ def get_recommended(id):
          print(f"ERROR: {str(e)}")
          return jsonify({"status": "error", "message": f"Internal Error: {str(e)}"}), 500
 
+@app.route('/post_order', methods=['POST'])
+def post_order():
+    data = request.json
+    seller_ids = data.get("seller_ids")
+    product_ids = data.get("product_ids")
+    user_id = data.get("user_id")
+    
+    if isinstance(seller_ids, list) and isinstance(product_ids, list) and user_id:
+        result = orders_collection.insert_one({
+            "seller_ids": seller_ids,
+            "product_ids": product_ids,
+            "user_id": user_id,
+            "status": "pending"  
+        })
+        if result.acknowledged:
+            return jsonify({
+                "message": "Order successfully placed",
+                "order_id": str(result.inserted_id) 
+            }), 200
+        else:
+             return jsonify({
+                "message": "Error while inserting into DB",
+            }), 200
+    else:
+        return jsonify({
+            "error": "Invalid input. Ensure seller_ids and product_ids are lists, and user_id is present."
+        }), 400
 if __name__ == '__main__':
     app.run(debug=True)
