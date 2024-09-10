@@ -9,7 +9,7 @@ import { grey } from '@mui/material/colors';
 import { toast } from 'react-toastify';
 import SellerNavbar from '../../components/SellerNavbar/SellerNavbar';
 const ProfileSection = () => {
-   
+    const [displayName, setDisplayName] = useState('')
     const gray = grey[50];
     const [Phone, setPhone] = useState('');
     const [email, setEmail] = useState('');
@@ -42,7 +42,8 @@ const ProfileSection = () => {
         setAddress(userData.address);
         setFirstName(userData.username);
         setImgUrl(userData.profile_img);
-        setPhone(userData.Phone);
+        setPhone(userData.phone);
+        setDisplayName(userData.name)
         setMainInterest(userData.interest)
     }
     }
@@ -69,6 +70,10 @@ const ProfileSection = () => {
         };
       const [isLoading, setIsLoading] = useState(false)
         const handleUpdate = async() =>{
+            if(!ImgFile){
+                await handleProfileDetailsUpdate();
+                return;
+            } 
             const data = new FormData();
             data.append("file", ImgFile);
             data.append("upload_preset", "freshmart");
@@ -95,6 +100,7 @@ const ProfileSection = () => {
                      email,
                      username:firstName,
                      address,
+                     name:displayName,
                      Phone,
                     }),
                   });
@@ -103,6 +109,25 @@ const ProfileSection = () => {
                   }
               }
               }
+       }
+       const handleProfileDetailsUpdate = async() =>{
+        setIsLoading(true)
+        const res = await fetch(`http://127.0.0.1:5000/update_user_details/${localStorage.getItem("id")}`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+             email,
+             username:firstName,
+             address,
+             name:displayName,
+             Phone,
+            }),
+          });
+          if(res.status === 200){
+            setIsLoading(false);
+          }
        }
     return (
         <>
@@ -182,6 +207,17 @@ const ProfileSection = () => {
                     value={address} 
                     onChange={(e) => setAddress(e.target.value)} 
                     placeholder="Address" 
+                />
+                {error && <p className={styles.errorMessage}>{error}</p>}
+            </div>
+            <div className={styles.formGroup}>
+                <label>Name</label>
+                <input 
+                    type="text" 
+                    className={styles.inputField} 
+                    value={displayName} 
+                    onChange={(e) => setDisplayName(e.target.value)} 
+                    placeholder="Name" 
                 />
                 {error && <p className={styles.errorMessage}>{error}</p>}
             </div>

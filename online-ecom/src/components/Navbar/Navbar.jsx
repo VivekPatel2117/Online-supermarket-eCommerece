@@ -5,8 +5,19 @@ import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../../assets/logo.png"
+import Logo from "../../assets/logo.png";
+import { useSelector } from "react-redux";
 export default function Navbar({handleChange}) {
+  const carts = useSelector((store) => store.cart.item);
+  const [quantity, setQuantity] = useState(0)
+  useEffect(() => {
+    let sum = 0
+    if(carts.length > 0){
+      carts.map((item)=>sum += item.quantity)
+    }
+    setQuantity(sum)
+  }, [carts])
+  
   const searchLabels = ["Apples", "Milk", "Butter"];
   const [currentLabel, setCurrentLabel] = useState(searchLabels[0]);
   const [animate, setAnimate] = useState(false);
@@ -60,7 +71,7 @@ export default function Navbar({handleChange}) {
       </div>
       <div className={styles.iconsWrapper}>
         <div className={styles.icons}>
-          <p onClick={()=>handleNavigation("Mycart")}><ShoppingCartOutlinedIcon fontSize={"large"}/></p>
+          <p onClick={()=>handleNavigation("Mycart")}><ShoppingCartOutlinedIcon fontSize={"large"}/>{quantity}</p>
           <p onClick={()=>handleNavigation("wishlist")}><FavoriteBorderIcon fontSize="large"/></p>
           <p onClick={()=>handleNavigation("profileSection")}><PersonOutlineIcon fontSize="large" /></p>
         </div>

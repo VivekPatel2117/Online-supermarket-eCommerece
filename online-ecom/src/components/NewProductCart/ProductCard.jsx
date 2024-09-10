@@ -5,6 +5,8 @@ import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../stores/cart";
 const ProductCard = ({
   isSeller,
   imgUrl,
@@ -21,8 +23,24 @@ const ProductCard = ({
   isMapped,
   recall
 }) => {
+  const carts = useSelector((store) => store.cart.item);
+  const dispatch = useDispatch();
+
+  const handleCart = () => {
+    dispatch(
+      addToCart({
+        productId: productId,
+        quantity: 1,
+        price:price
+      })
+    );
+  };
   const handleToast = () =>{
-    console.log("V")
+    console.log(isSeller)
+    if(!isSeller){
+      handleCart();
+      toast.success("Added to cart",{autoClose:3000,position:'top-center'})
+    }
     toast.error("Feature coming soon",{autoClose:3000,position:"top-center"})
   }
   const [quantityModal, setQuantityModal] = useState(false);
@@ -127,6 +145,10 @@ const ProductCard = ({
   const seeMoreNavigation = (value) =>{
     naviagte(`/productPage/${value}`)
   }
+  const handleBuyNow = () =>{
+    handleToast();
+    naviagte(`/Mycart/${localStorage.getItem('id')}`)
+  }
   return (
     <div className={styles.card}  style={{ height: heightVal ? heightVal : "" }}>
       <div className={styles.img}>
@@ -159,7 +181,7 @@ const ProductCard = ({
             Add more Quantity
           </p>
           ):(
-            <p>
+            <p onClick={()=>handleBuyNow()}>
             Buy now |
           </p>
           )}

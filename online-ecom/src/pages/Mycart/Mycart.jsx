@@ -12,6 +12,7 @@ import {
   addToCart,
   removeFromCart,
   removeProductFromCart,
+  vaccantCart,
 } from "../../stores/cart";
 export default function Mycart() {
   const carts = useSelector((store) => store.cart.item);
@@ -95,8 +96,10 @@ export default function Mycart() {
         const recommendedData = await recommendedResponse.json();
 
         // Filter out products already in productDetails
-        const filteredRecommendations =
-          recommendedData.category || recommendedData.wishlist || [];
+        const filteredRecommendations = [
+          ...(recommendedData.category || []),
+          ...(recommendedData.wishlist || [])
+        ];
         const productIdsInCart = new Set(
           productDetails.map((item) => item._id)
         );
@@ -127,7 +130,15 @@ export default function Mycart() {
       );
     }
   }, [recommended]);
-
+  const truncateDescription = (description, maxLength) => {
+    // Check if the length of the description exceeds the maximum length
+    if (description.length > maxLength) {
+      // Return the truncated description with ellipsis
+      return description.slice(0, maxLength) + "...";
+    }
+    // Return the original description if it doesn't exceed the maximum length
+    return description;
+  };
   useEffect(() => {
     let sum = 0;
     if (products.length > 0) {
@@ -180,28 +191,51 @@ export default function Mycart() {
       });
   };
   const handleBuyNow = (amount) =>{
-    console.log("Clicker")
     fetch(`http://127.0.0.1:5000/user_detail/${localStorage.getItem("id")}`,{
       method:"GET",
-    headers:{
-      "Content-type":"application/json"
-    }
+      headers:{
+        "Content-type":"application/json"
+      }
   }).then((res)=>res.json())
   .then((data)=>{
     if(data.data){
       const userData = data.data;
-      setConfirmModal(true)
       if(userData.address){
         setConfirmModal(true)
       }else{
-        setConfirmModal(true)
-        toast.success(`Please update the address from profile section. \n Click here to update address`,{autoClose:5000,position:"top-center"})
+        alert("Please Fill address from profile section to continue");
       }
     }
   })
   }
   const handlePayment = (amt) =>{
-    navigate(`/payment/${amt}`)
+    if(productDetails.length < 0) return;
+    const ids = productDetails.map((item)=>item._id);
+    const seller_ids = productDetails.map((item)=>item.user_id)
+    fetch(`http://127.0.0.1:5000//post_order`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body:JSON.stringify({
+        product_ids:ids,
+        seller_ids:seller_ids,
+        user_id
+      })
+    }).then((res)=>res.json()).then((data)=>{
+      if(data.order_id && data.order_id != ""){
+        dispatch(
+          vaccantCart()
+        )
+        navigate(`/payment/${amt}`)
+      }else{
+        alert("Error occured while checkout");
+        setConfirmModal(false)
+      }
+    }).catch((err)=>{
+      setConfirmModal(false)
+      alert("Error occured while checkout");
+    })
   }
   return (
     <div style={{ backgroundColor: "rgb(246 241 241)" }}>
@@ -269,7 +303,7 @@ export default function Mycart() {
                 <span>{productsTotal}</span>
               </div>
               <div className={styles.proceedToBuyBTtn}>
-                <button onClick={()=>handlePayment(productsTotal)}>Proceed to Buy</button>
+                <button onClick={()=>handleBuyNow(productsTotal)}>Proceed to Buy</button>
               </div>
             </div>
             <div className={styles.pairUpItems}>
@@ -285,7 +319,7 @@ export default function Mycart() {
                       />
                     </div>
                     <div className={styles.itemsBoxDesc}>
-                      <h4>{product.productName}</h4>
+                      <h4>{truncateDescription(product.productName,15)}</h4>
                       <p>
                         <CurrencyRupee />
                         {product.price}
@@ -307,7 +341,6 @@ export default function Mycart() {
           </div>
         </div>
       </div>
-      <Modal>
         <Modal
           isOpen={confirmModal}
           size={"small"}
@@ -315,8 +348,8 @@ export default function Mycart() {
           header={`Confirm payment`}
         >
           <div style={{ display: "grid", height: "60%", alignItems: "center" }}>
-            <p style={{ textAlign: "center" }}>
-              Confirm this payment
+            <p style={{ textAlign: "center",fontSize:"3vh" }}>
+              Confirm this payment of {productsTotal}
             </p>
             <div
               style={{
@@ -352,7 +385,6 @@ export default function Mycart() {
             </div>
           </div>
         </Modal>
-      </Modal>
     </div>
   );
 }

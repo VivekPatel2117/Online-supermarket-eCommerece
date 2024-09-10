@@ -139,6 +139,9 @@ export default function ProductDetails() {
               {details.productName}
               <br />
               <p>₹ {details.price}</p>
+              {details.name &&(
+                <p> Sold by - {details.name}</p>
+              )}
             </h1>
           </div>
           <p style={{ color: isAvailable ? "green" : "red" }}>

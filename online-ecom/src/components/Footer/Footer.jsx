@@ -23,6 +23,7 @@ const Footer = () => {
               <li><Link to="/terms" className={styles.link}>Terms & Condition</Link></li>
               <li><Link to="/" className={styles.link}>Seller login</Link></li>
               <li><Link to="/seller" className={styles.link}>Seller Register</Link></li>
+              <li><Link to="/logout" className={styles.link}>Logout</Link></li>
             </ul>
           </div>
 
