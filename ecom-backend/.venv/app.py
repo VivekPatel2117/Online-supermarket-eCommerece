@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify
 from pymongo import MongoClient, errors
 from flask_cors import CORS # type: ignore
 from bson import ObjectId
-
+from datetime import datetime
+import json
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}})
 try:
@@ -408,15 +409,17 @@ def get_recommended(id):
 def post_order():
     data = request.json
     seller_ids = data.get("seller_ids")
-    product_ids = data.get("product_ids")
     user_id = data.get("user_id")
-    
-    if isinstance(seller_ids, list) and isinstance(product_ids, list) and user_id:
+    order_details = data.get('order_details')
+    order_amount = data.get('order_amount')
+    if isinstance(seller_ids, list) and isinstance(order_details, list) and user_id:
         result = orders_collection.insert_one({
             "seller_ids": seller_ids,
-            "product_ids": product_ids,
             "user_id": user_id,
-            "status": "pending"  
+            "order_amount":order_amount,
+            "order_details":order_details,
+            "status": "pending",
+            "current_timestamp": datetime.now()  
         })
         if result.acknowledged:
             return jsonify({
@@ -429,7 +432,88 @@ def post_order():
             }), 200
     else:
         return jsonify({
-            "error": "Invalid input. Ensure seller_ids and product_ids are lists, and user_id is present."
+            "error": "Invalid input. Ensure seller_ids and order_details are lists, and user_id is present."
         }), 400
+def bson_timestamp():
+    # Format the current timestamp to match MongoDB BSON format
+    return {"$date": datetime.utcnow().isoformat()}
+
+def serialize_object_id(obj):
+    if isinstance(obj, ObjectId):
+        return str(obj)
+    raise TypeError(f"Object of type {type(obj).__name__} is not JSON serializable")
+
+@app.route('/get_order_details_user/<user_id>', methods=['GET'])
+def get_order_details_user(user_id):
+    # Fetch order details for the given user_id
+    order_details_cursor = orders_collection.find({"user_id": user_id})
+    
+    product_details = []
+    
+    # Iterate through each order detail
+    for order in order_details_cursor:
+        product_ids = [item['productId'] for item in order.get('order_details', [])]
+        status = order.get('status', 'unknown')  # Get the status field from the order
+        
+        # Get details for each product_id
+        product_detail = []
+        for prod_id in product_ids:
+            details = products_collection.find_one({"_id": ObjectId(prod_id)})
+            if details:
+                # Convert ObjectId in details to string
+                details = json.loads(json.dumps(details, default=serialize_object_id))
+                product_detail.append(details)
+        
+        # Add the current timestamp, status, and product details to the response
+        response_object = {
+            "current_timestamp": bson_timestamp(),
+            "status": status,
+            "product_details": product_detail
+        }
+        
+        product_details.append(response_object)
+    
+    return jsonify(product_details), 200
+@app.route('/get_order_details_seller/<seller_id>', methods=['GET'])
+def get_order_details_seller(seller_id):
+   # Fetch orders where seller_id is in seller_ids array and status is 'pending'
+    seller_orders = list(orders_collection.find({
+        "seller_ids": seller_id,
+        "status": "pending"
+    }))
+
+    # Fetch products associated with the seller_id
+    seller_products = {str(product['_id']): product for product in products_collection.find({"user_id": seller_id})}
+    
+    # Collect product details from the order details
+    ordered_products = []
+    for order in seller_orders:
+        order_details = order.get('order_details', [])
+        ordered_user = order.get('user_id')
+        order_id = order.get('_id')
+        for detail in order_details:
+            product_id = detail.get("productId")
+            if product_id in seller_products:
+                detail['ordered_user'] = ordered_user
+                detail['order_id'] = str(order_id)
+                ordered_products.append(detail)
+                
+    response_send = []
+    for order in ordered_products:
+        quantity = order.get('quantity')
+        price = order.get('price')
+        p_id = order.get('productId')
+        user_id = order.get('ordered_user')
+        order_id = order.get('order_id')
+        total_sum = quantity * price
+        product_details = seller_products[p_id]
+        product_details['order_quantity'] = quantity
+        product_details['order_amount'] = total_sum
+        product_details['ordered_by_user_id'] = user_id
+        product_details['_id'] = str(product_details['_id'])
+        product_details['order_id'] = order_id
+        response_send.append(product_details)
+    return jsonify({"message": "true",'data':response_send}), 200
+
 if __name__ == '__main__':
     app.run(debug=True)
