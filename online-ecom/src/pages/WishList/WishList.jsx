@@ -10,6 +10,10 @@ export default function WishList() {
   const handleActiveTab = (value) => {
     setActiveTab(value);
   };
+  const [subActiveTab, setSubActiveTab] = useState('processing')
+  const handleSubActiveTab = (value) =>{
+    setSubActiveTab(value)
+  }
   const [wishlistData, setWishlistData] = useState([]);
   const recall = () =>{
     handleWishlistData();
@@ -27,12 +31,45 @@ export default function WishList() {
   };
   useEffect(() => {
     handleWishlistData();
+    handleOrder_history();
   }, []);
-  useEffect(() => {
-    console.log(wishlistData)
-  }, [wishlistData])
-  
+  const [processingOrderData, setProcessingOrderData] = useState([])
+  const [deliveredData, setDeliveredData] = useState([])
+  const handleOrder_history = () => {
+    fetch(`http://127.0.0.1:5000/get_order_details_user/${localStorage.getItem('id')}`)
+      .then((res) => res.json())
+      .then((data) => {
+        const productDetailsArr = []
+        const deliveredProductsArr = []
+        data.map((item)=>{
+          const timestamp = new Date(item.current_timestamp["$date"]);
+          const formattedTimestamp = timestamp.toLocaleDateString('en-GB', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric'
+          });
+          const status = item.status
+          if(item.status == "pending"){
+            item.product_details.map((product)=>productDetailsArr.push({formattedTimestamp,status,...product}))
+          }
+          if(item.status == 'delivered'){
+            item.product_details.map((product)=>deliveredProductsArr.push({formattedTimestamp,status,...product}))
+          }
 
+        })
+        if(productDetailsArr.length > 0){
+          console.log(productDetailsArr)
+          setProcessingOrderData(productDetailsArr)
+        }
+        if(deliveredProductsArr.length > 0){
+          setDeliveredData(deliveredProductsArr)
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching order details:', error);
+      });
+  };
+  
   return (
     <>
       <Navbar />
@@ -71,7 +108,78 @@ export default function WishList() {
               ))}
         </div>
         ):(
-          <></>
+          <div>
+              <div style={{marginLeft:"2vw"}} className={styles.headingsWishlist}>
+          <p
+            className={subActiveTab === "processing" ? styles.activeTab : ""}
+            onClick={() => handleSubActiveTab("processing")}
+          >
+            Processing orders
+          </p>
+          <p
+            className={subActiveTab === "delivered" ? styles.activeTab : ""}
+            onClick={() => handleSubActiveTab("delivered")}
+          >
+            Delivered
+          </p>
+        
+               </div>
+          <div>
+              {subActiveTab === 'processing' ? (
+                <div className={styles.wishlistItemsSection}>
+                {processingOrderData.length > 0 ? (
+                  <>
+                  {processingOrderData.map((item,index)=>(
+                    <ProductCard
+                    isDelete={false}
+                    status={item.status}
+                    date={item.formattedTimestamp}
+                      key={index}
+                      category={item.category}
+                      isSeller={false}
+                      isMapped={true}
+                      imgUrl={item.imgUrl}
+                      productId={item._id}
+                      price={item.price}
+                      quantity={item.quantity}
+                      description={item.description}
+                      name={item.productName}
+                    />
+                  ))}
+                  </>
+                ):(
+                  <p>No processing orders</p>
+                )}
+                </div>
+              ):subActiveTab === 'delivered' &&(
+                <div className={styles.wishlistItemsSection}>
+                {deliveredData.length > 0 ? (
+                  <>
+                   {deliveredData.map((item,index)=>(
+                    <ProductCard
+                    isDelete={false}
+                    status={item.status}
+                    date={item.formattedTimestamp}
+                      key={index}
+                      category={item.category}
+                      isSeller={false}
+                      isMapped={true}
+                      imgUrl={item.imgUrl}
+                      productId={item._id}
+                      price={item.price}
+                      quantity={item.quantity}
+                      description={item.description}
+                      name={item.productName}
+                    />
+                  ))}
+                  </>
+                ):(
+                  <p>No delivered orders</p>
+                )}
+                </div>
+              )}
+          </div>
+          </div>
         )}
       </div>
     </>

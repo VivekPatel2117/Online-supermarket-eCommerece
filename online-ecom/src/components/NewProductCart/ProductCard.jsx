@@ -10,6 +10,8 @@ import { addToCart } from "../../stores/cart";
 const ProductCard = ({
   isSeller,
   imgUrl,
+  date,
+  status,
   category,
   isDelete,
   productId,
@@ -169,6 +171,12 @@ const ProductCard = ({
         <p className={styles.availability}>
           {isSeller ? `Quanity: ${isMapped ? quantityValue : quantity}` : "In stock"}
         </p>
+        {date && (
+          <p>{`Order date : ${date}`}</p>
+        )}
+        {status && (
+           <p>{`Order status : ${status}`}</p>
+        )}
         <button onClick={handleToast} className={styles.buttonYellow}>{isSeller ? "Boost this Product" : "Move to cart"}</button>
         <div className={styles.actionsWrapper} style={{ display: "flex", justifyContent: "space-evenly" }}>
           {isDelete ? (

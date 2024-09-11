@@ -212,15 +212,23 @@ export default function Mycart() {
     if(productDetails.length < 0) return;
     const ids = productDetails.map((item)=>item._id);
     const seller_ids = productDetails.map((item)=>item.user_id)
+    const product_quantity = []
+   ids.map((element)=>{
+      console.log("ID",element)
+      const index = products.findIndex(item => item.productId == element);
+      console.log("Cart",products[index],"INDEX",index,'mycart',products)
+      product_quantity.push(products[index])
+    })
     fetch(`http://127.0.0.1:5000//post_order`,{
       method:'POST',
       headers:{
         'Content-Type':'application/json'
       },
       body:JSON.stringify({
-        product_ids:ids,
         seller_ids:seller_ids,
-        user_id
+        user_id,
+        order_amount:productsTotal,
+        order_details:product_quantity
       })
     }).then((res)=>res.json()).then((data)=>{
       if(data.order_id && data.order_id != ""){

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import SellerNavbar from "../../components/SellerNavbar/SellerNavbar";
 import ProductCard from "../../components/NewProductCart/ProductCard";
 import Modal from "../../components/Modal/Modal";
+import Footer from "../../components/Footer/Footer"
 export default function SellerHome() {
   const [productsData, setProductsData] = useState([])
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -110,6 +111,91 @@ export default function SellerHome() {
       setIsLoading(false);
     }
   };
+  const [pendingOrders, setPendingOrders] = useState([])
+  const handleOrdersData = () => {
+    fetch(`http://127.0.0.1:5000/get_order_details_seller/${localStorage.getItem('id')}`)
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setPendingOrders(data.data)
+      })
+      .catch((error) => {
+        console.error("Error fetching order details:", error);
+        toast.error("Failed to fetch order details. Please try again later.",{autoClose:3000,position:"top-center"});
+      });
+  };
+  
+  useEffect(() => {
+handleOrdersData()
+  }, [])
+  const [userDetailsModal, setUserDetailsModal] = useState(false)
+  const [userData, setUserData] = useState([]);
+
+  const handleDeliveryDetails = (order) => {
+    setUserDetailsModal(true);
+    
+    fetch(`http://127.0.0.1:5000/user_detail/${order.ordered_by_user_id}`, {
+      method: "GET",
+      headers: {
+        "Content-type": "application/json",
+      },
+    })
+    .then((res) => {
+      if (res.status === 200) {
+        return res.json();
+      }
+    })
+    .then((data) => {
+      const userInfo = data.data;
+      const formattedUserData = {
+        username: userInfo.username,
+        address: userInfo.address,
+        phone: userInfo.phone,
+        email: userInfo.email,
+      };
+      setUserData(formattedUserData);
+      console.log(formattedUserData);
+    })
+    .catch((error) => {
+      console.error("Error fetching user details:", error);
+    });
+  };
+  
+ const handleMarkAsCompleted  = (item) =>{
+
+ }
+//  const handleDeliveryDetails = async(item) =>{
+//   setUserDetailsModal(true);
+//   setSpinner(true)
+//   const user_data = await getUserDetails(item.ordered_by_user_id);
+//   if(user_data){
+//     setUserData(userData)
+//   }
+//   setSpinner(false)
+//  }
+ const tableStyle = {
+  borderCollapse: "collapse",
+  width: "50%",
+  margin: "20px auto"
+};
+
+const thTdStyle = {
+  border: "1px solid black",
+  padding: "8px",
+  textAlign: "left"
+};
+
+const thStyle = {
+  backgroundColor: "#f2f2f2"
+};
+const [subActiveTab, setSubActiveTab] = useState('pending');
+const handleSubActiveTab = (value) =>{
+  setSubActiveTab(value)
+}
   return (
     <>
       <SellerNavbar />
@@ -134,7 +220,7 @@ export default function SellerHome() {
         </div>
         {activeTab === "dashboard" ? (
           <div className={styles.dashboardWrapper}>
-            <div className={styles.storePreview}>
+            {/* <div className={styles.storePreview}>
               <div className={styles.RecentCustomer}>
                 <p style={{ fontSize: "3.5vh", color: "gray" }}>
                   Recent Customers
@@ -176,30 +262,49 @@ export default function SellerHome() {
                 <p>Number of products</p>
                 <p>Most sold</p>
               </div>
+            </div> */}
+            <div style={{display:'flex',gap:'3vw',height:'5vh'}}>
+              <p onClick={()=>handleSubActiveTab('pending')} className={ subActiveTab === 'pending' && styles.SellerHomeHeadersActive}>Pending orders</p>
+              <p onClick={()=>handleSubActiveTab('delivered')} className={ subActiveTab === 'delivered' && styles.SellerHomeHeadersActive}>Completed orders</p>
             </div>
-            <div className={styles.cartItems}>
-              {/* Mapping function */}
-              <div className={styles.productImg}>
-                <img src={"https://via.placeholder.com/100"} alt="freshmart" />
-              </div>
-              <div className={styles.description}>
-                <div className={styles.descHead}>
-                  <h4>Fresh Apples</h4>
-                  <p>5 kg</p>
-                </div>
-                <div className={styles.descPrice}>
-                  <p> 250</p>
-                </div>
-                <div className={styles.actions}>
-                  <div className={styles.updateQuantity}>
-                    <p> Mark as completed</p>
-                  </div>
-                  <div className={styles.removeItem}>
-                    <p>Delete</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            {subActiveTab === 'pending' ? (
+              <>
+            {pendingOrders.length > 0 ? (
+              <>
+              {pendingOrders.map((item)=>(
+                   <div className={styles.cartItems}>
+                   {/* Mapping function */}
+                   <div className={styles.productImg}>
+                     <img src={item.imgUrl} alt="freshmart" />
+                   </div>
+                   <div className={styles.description}>
+                     <div className={styles.descHead}>
+                       <h4>{item.productName}</h4>
+                       <p>Quantity: {item.order_quantity}</p>
+                     </div>
+                     <div className={styles.descPrice}>
+                       <p>₹ {item.order_amount}</p>
+                     </div>
+                     <div className={styles.actions}>
+                       <div className={styles.updateQuantity}>
+                         <p onClick={()=>handleMarkAsCompleted(item)}> Mark as completed</p>
+                       </div>
+                       <div className={styles.removeItem}>
+                         <p onClick={()=>handleDeliveryDetails(item)}>See delivery address</p>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+              ))}
+              </>
+            ):(
+              <p>No pending orders</p>
+            )}
+              </>
+            ):(
+              <p>No past delivered orders</p>
+            )}
+           
           </div>
         ) : (
           <div className={styles.InventoryWrapper}>
@@ -337,6 +442,49 @@ export default function SellerHome() {
         </div>
       )}
       </Modal>
+      <Modal isOpen={userDetailsModal} header={"User details for delivery"} onClose={()=>setUserDetailsModal(false)}>
+      {userData.username ? (
+      <table style={tableStyle}>
+      <thead>
+        <tr>
+          <th style={{ ...thTdStyle, ...thStyle }}>Field</th>
+          <th style={{ ...thTdStyle, ...thStyle }}>Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style={thTdStyle}>Username</td>
+          <td style={thTdStyle}>{userData.username}</td>
+        </tr>
+        <tr>
+          <td style={thTdStyle}>Address</td>
+          <td style={thTdStyle}>{userData.address}</td>
+        </tr>
+        <tr>
+          <td style={thTdStyle}>Phone</td>
+          <td style={thTdStyle}>{userData.phone}</td>
+        </tr>
+        <tr>
+          <td style={thTdStyle}>Email</td>
+          <td style={thTdStyle}>{userData.email}</td>
+        </tr>
+      </tbody>
+      </table>
+      ):(
+        <div style={{ placeSelf: "center",display:"flex", justifyContent:"center",alignItems:"center", height:"auto" }}>
+        <div
+          className="spinner"
+          style={{
+            width: "15vh",
+            border: "4px solid #624FC2",
+            borderRightColor: "white",
+          }}
+        />
+      </div>
+      )}
+      </Modal>
+      <Footer/>
     </>
+
   );
 }
