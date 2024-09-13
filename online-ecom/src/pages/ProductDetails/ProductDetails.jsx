@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../components/Navbar/Navbar";
 import styles from "./ProductDetails.module.css";
-import { useParams } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { addToCart, removeFromCart } from "../../stores/cart";
 import { useSelector, useDispatch } from "react-redux";
 import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveOutlinedIcon from "@mui/icons-material/RemoveOutlined";
+
 export default function ProductDetails() {
   const { id } = useParams();
   const [pQuantity, setPQuantity] = useState(0);
@@ -117,7 +118,11 @@ export default function ProductDetails() {
     }
     console.log(carts);
   };
-
+  const navigate = useNavigate();
+const handleBuyNow = () =>{
+  handleCart();
+  navigate(`/Mycart/${localStorage.getItem('id')}`)
+}
   return (
     <>
       <Navbar />
@@ -177,7 +182,7 @@ export default function ProductDetails() {
             )}
           </div>
           <div className={styles.buynowBtn}>
-            <button>Buy Now</button>
+            <button onClick={()=>handleBuyNow()}>Buy Now</button>
           </div>
         </div>
       </div>

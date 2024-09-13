@@ -42,6 +42,7 @@ const ProductCard = ({
     if(!isSeller){
       handleCart();
       toast.success("Added to cart",{autoClose:3000,position:'top-center'})
+      return
     }
     toast.error("Feature coming soon",{autoClose:3000,position:"top-center"})
   }
@@ -142,6 +143,7 @@ const ProductCard = ({
   };
   const naviagte = useNavigate();
   const handleNavigation = () =>{
+    if(isSeller) return;
     naviagte(`/productDetails/${productId}`)
   }
   const seeMoreNavigation = (value) =>{

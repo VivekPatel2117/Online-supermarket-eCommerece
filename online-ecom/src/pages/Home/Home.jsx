@@ -54,7 +54,7 @@ export default function Home() {
       <Slider images={imgArr} />
       <div className={styles.productCategoryGrid}>
         <div  className={styles.verticalBox}>
-          <img onClick={()=>handleNavigation("Drinks")} src={Bevrages} alt="bevrages" />
+          <img onClick={()=>handleNavigation("drinks")} src={Bevrages} alt="bevrages" />
         </div>
         <div className={styles.horizontalBoxGrid}>
           <div className={styles.horizontalBox}>

@@ -61,7 +61,7 @@
     display: grid;
     grid-template-columns: 2fr 5fr;
     padding: 2vh 2vh;
-    height: 35vh;
+    height: 45vh;
     background-color: rgba(128, 128, 128, 0.093);
     width: 100%;
   }
@@ -130,6 +130,8 @@
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 1vh;
+    overflow: scroll;
+    height: 100%;
   }
   .InventoryWrapper > h1 > p{
     font-size: 3vh;

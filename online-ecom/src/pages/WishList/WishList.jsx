@@ -8,10 +8,14 @@ export default function WishList() {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState("wishlist");
   const handleActiveTab = (value) => {
+    handleOrder_history();
+    handleWishlistData();
     setActiveTab(value);
   };
   const [subActiveTab, setSubActiveTab] = useState('processing')
   const handleSubActiveTab = (value) =>{
+    handleOrder_history();
+    handleWishlistData();
     setSubActiveTab(value)
   }
   const [wishlistData, setWishlistData] = useState([]);
@@ -26,7 +30,10 @@ export default function WishList() {
       },
     })
       .then((res) => res.json())
-      .then((data) => setWishlistData(data.data))
+      .then((data) => {
+        if(data.data || data.data.length > 0) setWishlistData(data.data)
+        }
+      )
       .catch((err) => console.log(err));
   };
   useEffect(() => {
@@ -49,12 +56,16 @@ export default function WishList() {
             year: 'numeric'
           });
           const status = item.status
-          if(item.status == "pending"){
-            item.product_details.map((product)=>productDetailsArr.push({formattedTimestamp,status,...product}))
-          }
-          if(item.status == 'delivered'){
-            item.product_details.map((product)=>deliveredProductsArr.push({formattedTimestamp,status,...product}))
-          }
+          item.product_details.map((product)=>{
+            if(product.order_status == "pending"){
+              productDetailsArr.push({formattedTimestamp,status,...product})
+            }
+          })
+          item.product_details.map((product)=>{
+            if(product.order_status == "completed"){
+              deliveredProductsArr.push({formattedTimestamp,status,...product})
+            }
+          })
 
         })
         if(productDetailsArr.length > 0){
@@ -90,6 +101,8 @@ export default function WishList() {
         </div>
         {activeTab === 'wishlist' ? (
         <div className={styles.wishlistItemsSection}>
+          {wishlistData.length > 0 ? (
+            <>
               {wishlistData.map((item, index) => (
                 <ProductCard
                 isDelete={true}
@@ -106,6 +119,10 @@ export default function WishList() {
                   name={item.productName}
                 />
               ))}
+            </>
+          ):(
+            <><h1>No products in wishlist</h1></>
+          )}
         </div>
         ):(
           <div>

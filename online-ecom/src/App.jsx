@@ -18,7 +18,7 @@ import TermsAndConditions from './pages/terms/TermsAndConditions';
 import Payment from './pages/payment/payment';
 import Logout from './pages/Logout/Logout';
 import ProtectedRoute from './pages/protectedRoute'; // Import ProtectedRoute component
-
+import SellerRoutes from './pages/sellerRoutes';
 function App() {
   return (
     <>
@@ -35,7 +35,9 @@ function App() {
             path='/Home'
             element={
               <ProtectedRoute>
+                <SellerRoutes>
                 <Home />
+                </SellerRoutes>
               </ProtectedRoute>
             }
           />
@@ -43,7 +45,9 @@ function App() {
             path='/Mycart/:user_id'
             element={
               <ProtectedRoute>
+                <SellerRoutes>
                 <Mycart />
+                </SellerRoutes>
               </ProtectedRoute>
             }
           />
@@ -51,7 +55,9 @@ function App() {
             path='/wishlist/:id'
             element={
               <ProtectedRoute>
+                <SellerRoutes>
                 <WishList />
+                </SellerRoutes>
               </ProtectedRoute>
             }
           />
@@ -67,7 +73,9 @@ function App() {
             path='/SellerHome'
             element={
               <ProtectedRoute>
+                <SellerRoutes>
                 <SellerHome />
+                </SellerRoutes>
               </ProtectedRoute>
             }
           />
@@ -83,7 +91,9 @@ function App() {
             path='/productPage/:category'
             element={
               <ProtectedRoute>
+                <SellerRoutes>
                 <ProductPage />
+                </SellerRoutes>
               </ProtectedRoute>
             }
           />
@@ -107,7 +117,9 @@ function App() {
             path='/payment/:amount'
             element={
               <ProtectedRoute>
+                <SellerRoutes>
                 <Payment />
+                </SellerRoutes>
               </ProtectedRoute>
             }
           />

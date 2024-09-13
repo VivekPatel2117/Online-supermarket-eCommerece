@@ -66,7 +66,7 @@ export default function SellerHome() {
      data.append("file", productImage);
      data.append("upload_preset", "freshmart");
      data.append("cloud_name", "Pillai-ig");
-     toast.warn("Please wait while we are adding a new product",{autoClose:3000,position:"top-center"});
+     toast.warn("Please wait while we are adding a new product",{autoClose:1500,position:"top-center"});
      setIsLoading(true)
      const response = await fetch(
        "https://api.cloudinary.com/v1_1/Pillai-ig/image/upload",
@@ -111,7 +111,8 @@ export default function SellerHome() {
       setIsLoading(false);
     }
   };
-  const [pendingOrders, setPendingOrders] = useState([])
+  const [deliveredOrders, setDeliveredOrders] = useState([])
+  const [pendingOrders, setPendingOrders] = useState([]);
   const handleOrdersData = () => {
     fetch(`http://127.0.0.1:5000/get_order_details_seller/${localStorage.getItem('id')}`)
       .then((res) => {
@@ -121,7 +122,8 @@ export default function SellerHome() {
         return res.json();
       })
       .then((data) => {
-        setPendingOrders(data.data)
+        setPendingOrders(data.pending_products)
+        setDeliveredOrders(data.completed_products)
       })
       .catch((error) => {
         console.error("Error fetching order details:", error);
@@ -165,18 +167,35 @@ handleOrdersData()
     });
   };
   
- const handleMarkAsCompleted  = (item) =>{
+ const handleMarkAsCompleted  = async(item) =>{
+  console.log(item);
+  const productId = item._id;
+  const orderId = item.order_id;
+  const sellerId = item.user_id;
+  try {
+    const response = await fetch(`http://127.0.0.1:5000/mark_complete_by_seller/${sellerId}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            productId: productId,
+            orderId: orderId,
+        }),
+    });
 
+    const data = await response.json();
+    
+    if (response.ok) {
+      toast.success("Order completed successfully",{autoClose:1500,position:"top-left"})
+       handleOrdersData()
+    } else {
+        console.log(`Error: ${data.error}`);
+    }
+} catch (error) {
+    console.log(`Network error: ${error.message}`);
+}
  }
-//  const handleDeliveryDetails = async(item) =>{
-//   setUserDetailsModal(true);
-//   setSpinner(true)
-//   const user_data = await getUserDetails(item.ordered_by_user_id);
-//   if(user_data){
-//     setUserData(userData)
-//   }
-//   setSpinner(false)
-//  }
  const tableStyle = {
   borderCollapse: "collapse",
   width: "50%",
@@ -194,6 +213,7 @@ const thStyle = {
 };
 const [subActiveTab, setSubActiveTab] = useState('pending');
 const handleSubActiveTab = (value) =>{
+  handleOrdersData();
   setSubActiveTab(value)
 }
   return (
@@ -220,49 +240,6 @@ const handleSubActiveTab = (value) =>{
         </div>
         {activeTab === "dashboard" ? (
           <div className={styles.dashboardWrapper}>
-            {/* <div className={styles.storePreview}>
-              <div className={styles.RecentCustomer}>
-                <p style={{ fontSize: "3.5vh", color: "gray" }}>
-                  Recent Customers
-                </p>
-                <div className={styles.userBoxWrapper}>
-                  <div className={styles.userBox}>
-                    <img src="https://via.placeholder.com/50x50" alt="" />
-                    <p>Username</p>
-                    <p>amt</p>
-                  </div>
-                  <div className={styles.userBox}>
-                    <img src="https://via.placeholder.com/50x50" alt="" />
-                    <p>Username</p>
-                    <p>amt</p>
-                  </div>
-                  <div className={styles.userBox}>
-                    <img src="https://via.placeholder.com/50x50" alt="" />
-                    <p>Username</p>
-                    <p>amt</p>
-                  </div>
-                  <div className={styles.userBox}>
-                    <img src="https://via.placeholder.com/50x50" alt="" />
-                    <p>Username</p>
-                    <p>amt</p>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.WeeklyOrders}>
-                <p style={{ fontSize: "3.5vh", color: "gray" }}>
-                  Weekly orders
-                </p>
-                <p>Number of orders</p>
-                <h1>Amout</h1>
-              </div>
-              <div className={styles.Overview}>
-                <p style={{ fontSize: "3.5vh", color: "gray" }}>
-                  Store overview
-                </p>
-                <p>Number of products</p>
-                <p>Most sold</p>
-              </div>
-            </div> */}
             <div style={{display:'flex',gap:'3vw',height:'5vh'}}>
               <p onClick={()=>handleSubActiveTab('pending')} className={ subActiveTab === 'pending' && styles.SellerHomeHeadersActive}>Pending orders</p>
               <p onClick={()=>handleSubActiveTab('delivered')} className={ subActiveTab === 'delivered' && styles.SellerHomeHeadersActive}>Completed orders</p>
@@ -270,7 +247,7 @@ const handleSubActiveTab = (value) =>{
             {subActiveTab === 'pending' ? (
               <>
             {pendingOrders.length > 0 ? (
-              <>
+              <div style={{display:"grid",height:'100%',gap:"2vh",overflow:'scroll'}}>
               {pendingOrders.map((item)=>(
                    <div className={styles.cartItems}>
                    {/* Mapping function */}
@@ -296,13 +273,47 @@ const handleSubActiveTab = (value) =>{
                    </div>
                  </div>
               ))}
-              </>
+              </div>
             ):(
               <p>No pending orders</p>
             )}
               </>
             ):(
-              <p>No past delivered orders</p>
+              <>
+              {deliveredOrders.length > 0 ? (
+                <>
+                              <div style={{display:"grid",height:'100%',overflow:'scroll'}}>
+              {deliveredOrders.map((item)=>(
+                   <div className={styles.cartItems}>
+                   {/* Mapping function */}
+                   <div className={styles.productImg}>
+                     <img src={item.imgUrl} alt="freshmart" />
+                   </div>
+                   <div className={styles.description}>
+                     <div className={styles.descHead}>
+                       <h4>{item.productName}</h4>
+                       <p>Quantity: {item.order_quantity}</p>
+                     </div>
+                     <div className={styles.descPrice}>
+                       <p>₹ {item.order_amount}</p>
+                     </div>
+                     <div className={styles.actions}>
+                       <div className={styles.updateQuantity}>
+                         <p>Completed</p>
+                       </div>
+                       <div className={styles.removeItem}>
+                         <p onClick={()=>handleDeliveryDetails(item)}>See delivery address</p>
+                       </div>
+                     </div>
+                   </div>
+                 </div>
+              ))}
+              </div>
+                </>
+              ):(
+                <p>No delivered products</p>
+              )}
+              </>
             )}
            
           </div>
