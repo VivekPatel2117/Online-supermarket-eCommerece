@@ -413,8 +413,9 @@ def post_order():
     order_details = data.get('order_details')
     order_amount = data.get('order_amount')
     if isinstance(seller_ids, list) and isinstance(order_details, list) and user_id:
+        unique_seller_ids = list(set(seller_ids))
         result = orders_collection.insert_one({
-            "seller_ids": seller_ids,
+            "seller_ids": unique_seller_ids,
             "user_id": user_id,
             "order_amount":order_amount,
             "order_details":order_details,
@@ -448,72 +449,199 @@ def get_order_details_user(user_id):
     # Fetch order details for the given user_id
     order_details_cursor = orders_collection.find({"user_id": user_id})
     
-    product_details = []
+    response_list = []
     
     # Iterate through each order detail
     for order in order_details_cursor:
-        product_ids = [item['productId'] for item in order.get('order_details', [])]
-        status = order.get('status', 'unknown')  # Get the status field from the order
+        # Extract the details from the order
+        order_details = order.get('order_details', [])
         
-        # Get details for each product_id
-        product_detail = []
-        for prod_id in product_ids:
-            details = products_collection.find_one({"_id": ObjectId(prod_id)})
-            if details:
-                # Convert ObjectId in details to string
-                details = json.loads(json.dumps(details, default=serialize_object_id))
-                product_detail.append(details)
+        product_details = []
+        for detail in order_details:
+            product_id = detail.get('productId')
+            status = detail.get('status', 'pending')  # Status of the product
+            
+            # Get product details
+            product = products_collection.find_one({"_id": ObjectId(product_id)})
+            if product:
+                # Convert ObjectId in product to string
+                product = json.loads(json.dumps(product, default=serialize_object_id))
+                product['order_status'] = status  # Include the status from order details
+                product['quantity'] = detail.get('quantity', 'not specified')  # Include quantity if available
+                product['price'] = detail.get('price', 'not specified')  # Include price if available
+                product_details.append(product)
         
-        # Add the current timestamp, status, and product details to the response
+        # Add the current timestamp and product details to the response
         response_object = {
             "current_timestamp": bson_timestamp(),
-            "status": status,
-            "product_details": product_detail
+            "product_details": product_details
         }
         
-        product_details.append(response_object)
+        response_list.append(response_object)
     
-    return jsonify(product_details), 200
+    return jsonify(response_list), 200
+
+
 @app.route('/get_order_details_seller/<seller_id>', methods=['GET'])
 def get_order_details_seller(seller_id):
-   # Fetch orders where seller_id is in seller_ids array and status is 'pending'
+    # Fetch orders where seller_id is in seller_ids array and status is 'pending'
     seller_orders = list(orders_collection.find({
         "seller_ids": seller_id,
-        "status": "pending"
     }))
 
     # Fetch products associated with the seller_id
     seller_products = {str(product['_id']): product for product in products_collection.find({"user_id": seller_id})}
     
-    # Collect product details from the order details
+    # Initialize lists to separate completed and pending products
     ordered_products = []
+    completed_products = []
+    pending_products = []
+
     for order in seller_orders:
         order_details = order.get('order_details', [])
         ordered_user = order.get('user_id')
-        order_id = order.get('_id')
+        order_id = str(order.get('_id'))  # Convert ObjectId to string
         for detail in order_details:
             product_id = detail.get("productId")
             if product_id in seller_products:
-                detail['ordered_user'] = ordered_user
-                detail['order_id'] = str(order_id)
-                ordered_products.append(detail)
                 
-    response_send = []
-    for order in ordered_products:
-        quantity = order.get('quantity')
-        price = order.get('price')
-        p_id = order.get('productId')
-        user_id = order.get('ordered_user')
-        order_id = order.get('order_id')
-        total_sum = quantity * price
-        product_details = seller_products[p_id]
-        product_details['order_quantity'] = quantity
-        product_details['order_amount'] = total_sum
-        product_details['ordered_by_user_id'] = user_id
-        product_details['_id'] = str(product_details['_id'])
-        product_details['order_id'] = order_id
-        response_send.append(product_details)
-    return jsonify({"message": "true",'data':response_send}), 200
+                # Include additional fields from the order details
+                detail['ordered_by_user_id'] = ordered_user
+                detail['order_id'] = order_id
+                detail['status'] = detail.get('status', 'pending')  # Default to 'not specified' if status not present
+                product = seller_products[product_id]
+                product['_id'] = str(product['_id'])
+                product['ordered_by_user_id'] = detail['ordered_by_user_id']
+                product['product_id'] = detail['order_id']
+                product['status'] = detail['status']
+                product['order_id'] = detail['order_id']
+                total_sum = float(detail['quantity']) * float(detail['price'])  
+                product['order_amount'] = total_sum
+                product['order_quantity'] = detail['quantity']
+                # Separate products based on their status
+                print(product)
+                if product['status'] == 'completed':
+                    completed_products.append(product)
+                else:
+                    pending_products.append(product)
+                
+                ordered_products.append(detail)
+
+    # Construct the response data for existing orders
+    # response_send = []
+    # for order in ordered_products:
+    #     quantity = order.get('quantity')
+    #     price = order.get('price')
+    #     p_id = order.get('productId')
+    #     user_id = order.get('ordered_user')
+    #     order_id = order.get('order_id')
+    #     total_sum = float(quantity) * float(price)  # Ensure price is treated as a float
+    #     product_details = seller_products.get(p_id, {})
+    #     product_details['order_quantity'] = quantity
+    #     product_details['order_amount'] = total_sum
+    #     product_details['ordered_by_user_id'] = user_id
+    #     product_details['_id'] = str(product_details.get('_id', ''))  # Convert ObjectId to string
+    #     product_details['order_id'] = order_id
+    #     product_details['status'] = order.get('status', 'not specified')  # Include status from order_details
+    #     response_send.append(product_details)
+    
+    # Return the three responses
+    return jsonify({
+        "message": "true",
+        'completed_products': completed_products,
+        'pending_products': pending_products
+    }), 200
+
+@app.route('/mark_complete_by_seller/<seller_id>', methods=['POST'])
+def mark_complete_by_seller(seller_id):
+    data = request.json
+    product_id = data.get('productId')
+    order_id = data.get('orderId')
+
+    if not product_id or not order_id:
+        return jsonify({
+            "error": "Both 'productId' and 'orderId' must be provided."
+        }), 400
+
+    try:
+        # Convert order_id to ObjectId for MongoDB query
+        order_id_obj = ObjectId(order_id)
+    except Exception as e:
+        return jsonify({
+            "error": "Invalid orderId format."
+        }), 400
+
+    # Find the order by order_id
+    order = orders_collection.find_one({"_id": order_id_obj, "seller_ids": seller_id, "status": "pending"})
+
+    if not order:
+        return jsonify({
+            "error": "Order not found or seller_id does not match."
+        }), 404
+
+    # Update the product status in the order details
+    result = orders_collection.update_one(
+                {
+            "_id": ObjectId(order_id),
+            "seller_ids": seller_id,
+        },
+        {
+            "$set": {
+                "order_details.$[elem].status": "completed"
+            }
+        },
+            array_filters= [
+                { "elem.productId": product_id }
+            ]
+        )
+    print(result)
+    if result.matched_count == 0:
+        return jsonify({
+            "error": "ProductId not found in order details or seller_id does not match."
+        }), 404
+
+    # Retrieve the product's current quantity
+    product = products_collection.find_one({"_id": ObjectId(product_id)})
+    if not product:
+        return jsonify({
+            "error": "Product not found."
+        }), 404
+
+    # Calculate the new quantity
+    product_quantity = int(product['quantity'])
+    # Assuming that each product in the order has a quantity field
+    ordered_quantity = next(
+        (item['quantity'] for item in order['order_details'] if item['productId'] == product_id),
+        0
+    )
+    new_quantity = product_quantity - ordered_quantity
+
+    # Update the product quantity in the product_collection
+    products_collection.update_one(
+        {"_id": ObjectId(product_id)},
+        {"$set": {"quantity": str(new_quantity)}}
+    )
+
+    # Check if all products in the order are completed
+    updated_order = orders_collection.find_one({"_id": order_id_obj})
+
+    all_completed = all(
+        item.get('status') == 'completed' for item in updated_order.get('order_details', [])
+    )
+
+    if all_completed:
+        # Update the order status to 'delivered'
+        orders_collection.update_one(
+            {"_id": order_id_obj},
+            {"$set": {"status": "delivered"}}
+        )
+        return jsonify({
+            "message": "Order details updated successfully and order status set to delivered."
+        }), 200
+    else:
+        return jsonify({
+            "message": "Order details updated successfully but not all products are completed yet."
+        }), 200
 
 if __name__ == '__main__':
     app.run(debug=True)
